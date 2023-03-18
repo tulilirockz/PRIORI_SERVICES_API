@@ -1,0 +1,67 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PRIORI_SERVICES_API.Model;
+using System.Data;
+
+
+namespace PRIORI_SERVICES_API.Controllers;
+[Route("api/[controller]")]
+[ApiController]
+public class BlogPostsController : ControllerBase
+{
+    private readonly PrioriDbContext _context;
+    public BlogPostsController(PrioriDbContext context)
+    {
+        _context = context;
+    }
+
+    [HttpGet(Name = "GetBlogPosts")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<PostBlog>>> GetPosts()
+    {
+        return await _context.tblPostBlog
+            .Select(x => x)
+            .ToListAsync();
+    }
+
+    [HttpGet("{id}", Name = "GetBlogPostById")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<PostBlog>>> GetPostsFromID(int id)
+    {
+        var blogpost = await _context.tblPostBlog.FindAsync(id);
+
+        if (blogpost == null) {
+            return NotFound();
+        }
+
+        return Ok(blogpost);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<PostBlogDBO>> CreateBlogPost(PostBlogDBO dbo)
+    {
+        var novoPost = new PostBlog
+        {
+            id_autor = dbo.id_autor,
+            categoria = dbo.categoria,
+            titulo = dbo.titulo
+        };
+
+        _context.tblPostBlog.Add(novoPost);
+        try {
+            await _context.SaveChangesAsync();
+        } catch (DbUpdateConcurrencyException) {
+            return BadRequest();
+        }
+
+        return CreatedAtAction(
+            nameof(GetPosts),
+            new { id = novoPost.id_post },
+            novoPost.toDBO(novoPost));
+    }
+}
