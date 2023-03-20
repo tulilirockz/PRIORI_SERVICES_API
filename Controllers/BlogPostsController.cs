@@ -49,7 +49,9 @@ public class BlogPostsController : ControllerBase
         {
             id_autor = dbo.id_autor,
             categoria = dbo.categoria,
-            titulo = dbo.titulo
+            titulo = dbo.titulo,
+            data_criacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+            conteudo = dbo.conteudo
         };
 
         _context.tblPostBlog.Add(novoPost);
@@ -61,7 +63,9 @@ public class BlogPostsController : ControllerBase
 
         return CreatedAtAction(
             nameof(GetPosts),
-            new { id = novoPost.id_post },
+            new { 
+                id = novoPost.id_post 
+            },
             novoPost.toDBO(novoPost));
     }
 }
