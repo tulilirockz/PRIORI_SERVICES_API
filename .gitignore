@@ -1,4 +1,6 @@
 .env
+out
+secrets.json
 ###################
 # compiled source #
 ###################

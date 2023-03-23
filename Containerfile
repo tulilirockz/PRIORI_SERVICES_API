@@ -1,13 +1,27 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS base
 
-RUN apk upgrade --update
+RUN apk upgrade --update && apk add icu-libs icu-data-full tzdata
 
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build-env
+
+RUN apk upgrade --update && apk add icu-libs icu-data-full tzdata
+
+WORKDIR /App
 
 COPY . .
 
-RUN dotnet build -f net7.0 -c Release -r linux-musl-x64 --self-contained -v m
+RUN dotnet restore
 
-EXPOSE 5000
+RUN dotnet publish -c Release -o out
 
-CMD [ "/app/bin/Release/net7.0/linux-musl-x64/PRIORI_SERVICES_API" ]
+FROM base AS final
+
+EXPOSE 80
+
+WORKDIR /App
+
+COPY --from=build-env /App/out .
+
+ENV DOTNET_EnableDiagnostics=0
+
+ENTRYPOINT ["dotnet", "PRIORI_SERVICES_API.dll"]
