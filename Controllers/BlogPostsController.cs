@@ -32,7 +32,8 @@ public class BlogPostsController : ControllerBase
     {
         var blogpost = await _context.tblPostBlog.FindAsync(id);
 
-        if (blogpost == null) {
+        if (blogpost == null)
+        {
             return NotFound();
         }
 
@@ -48,23 +49,27 @@ public class BlogPostsController : ControllerBase
         var novoPost = new PostBlog
         {
             id_autor = dbo.id_autor,
-            categoria = dbo.categoria,
+            id_categoria = dbo.id_categoria,
             titulo = dbo.titulo,
             data_criacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
             conteudo = dbo.conteudo
         };
 
         _context.tblPostBlog.Add(novoPost);
-        try {
+        try
+        {
             await _context.SaveChangesAsync();
-        } catch (DbUpdateConcurrencyException) {
+        }
+        catch (DbUpdateConcurrencyException)
+        {
             return BadRequest();
         }
 
         return CreatedAtAction(
             nameof(GetPosts),
-            new { 
-                id = novoPost.id_post 
+            new
+            {
+                id = novoPost.id_post
             },
             novoPost.toDBO(novoPost));
     }
