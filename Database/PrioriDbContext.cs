@@ -6,7 +6,7 @@ public class PrioriDbContext : DbContext
     public PrioriDbContext(DbContextOptions<PrioriDbContext> options) : base(options) { }
 
     public DbSet<PostBlog> tblPostBlog { get; set; }
-    public DbSet<CategoriaBlog> tblCategoria { get; set; }
+    public DbSet<CategoriaBlog> tblCategoriaBlog { get; set; }
     // public DbSet<tblPostBlog> tblConsultor { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<PostBlog>().Property(p => p.conteudo).HasColumnType("varchar").HasMaxLength(2000);
 
         modelBuilder.Entity<CategoriaBlog>().HasKey(p => p.id_categoria);
-        modelBuilder.Entity<CategoriaBlog>().Property(p => p.nome_categoria).HasColumnType("varchar").HasMaxLength(2000);
+        modelBuilder.Entity<CategoriaBlog>().Property(p => p.nome_categoria).HasColumnType("varchar").HasMaxLength(50);
 
         base.OnModelCreating(modelBuilder);
     }

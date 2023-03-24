@@ -20,9 +20,7 @@ public class BlogPostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<PostBlog>>> GetPosts()
     {
-        return await _context.tblPostBlog
-            .Select(x => x)
-            .ToListAsync();
+        return await _context.tblPostBlog.ToListAsync();
     }
 
     [HttpGet("{id}", Name = "GetBlogPostById")]
@@ -30,14 +28,9 @@ public class BlogPostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<PostBlog>>> GetPostsFromID(int id)
     {
-        var blogpost = await _context.tblPostBlog.FindAsync(id);
+        PostBlog? blogpost = await _context.tblPostBlog.FindAsync(id);
 
-        if (blogpost == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(blogpost);
+        return (blogpost == null) ? NotFound() : Ok(blogpost);
     }
 
     [HttpPost]
