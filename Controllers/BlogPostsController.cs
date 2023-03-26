@@ -1,16 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
-using System.Data;
-
 
 namespace PRIORI_SERVICES_API.Controllers;
-[Route("api/[controller]")]
+[Route("api/Blog/[controller]")]
 [ApiController]
-public class BlogPostsController : ControllerBase
+public class PostsController : ControllerBase
 {
     private readonly PrioriDbContext _context;
-    public BlogPostsController(PrioriDbContext context)
+    public PostsController(PrioriDbContext context)
     {
         _context = context;
     }
@@ -28,9 +26,12 @@ public class BlogPostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<PostBlog>>> GetPostsFromID(int id)
     {
-        PostBlog? blogpost = await _context.tblPostBlog.FindAsync(id);
+        PostBlog? SelectedBlogPost = await _context.tblPostBlog.FindAsync(id);
 
-        return (blogpost == null) ? NotFound() : Ok(blogpost);
+        if (SelectedBlogPost == null)
+            return NotFound();
+        else
+            return Ok(SelectedBlogPost);
     }
 
     [HttpPost]

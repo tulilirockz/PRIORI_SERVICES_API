@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
 
 namespace PRIORI_SERVICES_API.Controllers;
-[Route("api/[controller]")]
+[Route("api/Blog/[controller]")]
 [ApiController]
-public class BlogCategoriasController : ControllerBase
+public class CategoriasController : ControllerBase
 {
     private readonly PrioriDbContext _context;
-    public BlogCategoriasController(PrioriDbContext context)
+    public CategoriasController(PrioriDbContext context)
     {
         _context = context;
     }
@@ -26,8 +26,11 @@ public class BlogCategoriasController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<CategoriaBlog>>> GetCategoriaFromID(int id)
     {
-        CategoriaBlog? blogcategoria = await _context.tblCategoriaBlog.FindAsync(id);
+        CategoriaBlog? SelectedCategoria = await _context.tblCategoriaBlog.FindAsync(id);
 
-        return (blogcategoria == null) ? NotFound() : Ok(blogcategoria);
+        if (SelectedCategoria == null)
+            return NotFound();
+        else
+            return Ok(SelectedCategoria);
     }
 }
