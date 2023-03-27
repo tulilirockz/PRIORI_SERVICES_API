@@ -31,16 +31,15 @@ public class PostsController : ControllerBase
 
         if (SelectedBlogPost == null)
             return NotFound();
-        else
-            return Ok(SelectedBlogPost);
+
+        return Ok(SelectedBlogPost);
     }
 
     [HttpPost(Name = "CreateBlogPost"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PostBlogDBO>> CreateBlogPost(PostBlogDBO dbo)
+    public async Task<ActionResult<PostBlogDbo>> CreateBlogPost(PostBlogDbo dbo)
     {
         var novoPost = new PostBlog
         {
@@ -58,7 +57,7 @@ public class PostsController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest();
+            return BadRequest("Falha ao registrar mudanças no banco de dados");
         }
 
         return CreatedAtAction(
@@ -68,5 +67,60 @@ public class PostsController : ControllerBase
                 id = novoPost.id_post
             },
             novoPost.toDBO(novoPost));
+    }
+
+    [HttpDelete("{id}"), Authorize(Roles = "Consultor")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteBlogPost(int id)
+    {
+        PostBlog? SelectedBlogPost = await _context.tblPostBlog.FindAsync(id);
+
+        if (SelectedBlogPost == null)
+            return NotFound();
+
+        _context.tblPostBlog.Remove(SelectedBlogPost);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return BadRequest("Falha ao registrar mudanças no banco de dados");
+        }
+
+        return NoContent();
+    }
+
+    [HttpPut("{id}"), Authorize(Roles = "Consultor")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AlterBlogPost(int id, PostBlogDbo BlogPost)
+    {
+        PostBlog? SelectedBlogPost = await _context.tblPostBlog.FindAsync(id);
+
+        if (SelectedBlogPost == null)
+            return BadRequest();
+
+        SelectedBlogPost.conteudo = BlogPost.conteudo;
+        SelectedBlogPost.data_criacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+        SelectedBlogPost.descricao = BlogPost.descricao;
+        SelectedBlogPost.id_autor = BlogPost.id_autor;
+        SelectedBlogPost.id_categoria = BlogPost.id_categoria;
+        SelectedBlogPost.titulo = BlogPost.titulo;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return BadRequest();
+        }
+
+        return NoContent();
     }
 }
