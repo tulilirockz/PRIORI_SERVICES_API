@@ -8,7 +8,7 @@ public class PrioriDbContext : DbContext
     public DbSet<PostBlog> tblPostBlog { get; set; }
     public DbSet<CategoriaBlog> tblCategoriaBlog { get; set; }
     public DbSet<Consultor> tblConsultor { get; set; }
-    public DbSet<Usuario> tblUsuario { get; set; }
+    public DbSet<Cliente> tblClientes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,27 +22,31 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<CategoriaBlog>().HasKey(p => p.id_categoria);
         modelBuilder.Entity<CategoriaBlog>().Property(p => p.nome_categoria).HasColumnType("varchar").HasMaxLength(50);
 
-        modelBuilder.Entity<Usuario>().HasKey(p => p.id);
-        modelBuilder.Entity<Usuario>().Property(p => p.nome).HasColumnType("varchar").HasMaxLength(40);
-        modelBuilder.Entity<Usuario>().Property(p => p.id_consultor).HasColumnType("int");
-        modelBuilder.Entity<Usuario>().Property(p => p.id_tipoinvestidor).HasColumnType("int");
-        modelBuilder.Entity<Usuario>().Property(p => p.cpf).HasColumnType("varchar").HasMaxLength(11);
-        modelBuilder.Entity<Usuario>().Property(p => p.email).HasColumnType("varchar").HasMaxLength(25);
-        modelBuilder.Entity<Usuario>().Property(p => p.pontuacao).HasColumnType("numeric");
-        modelBuilder.Entity<Usuario>().Property(p => p.endereco).HasColumnType("varchar").HasMaxLength(60);
-        modelBuilder.Entity<Usuario>().Property(p => p.telefone).HasColumnType("char").HasMaxLength(15);
-        modelBuilder.Entity<Usuario>().Property(p => p.telefone).HasColumnType("char").HasMaxLength(15);
+        modelBuilder.Entity<Cliente>().HasKey(p => p.id_cliente);
+        modelBuilder.Entity<Cliente>().Property(p => p.nome).HasColumnType("varchar").HasMaxLength(40);
+        modelBuilder.Entity<Cliente>().Property(p => p.id_consultor).HasColumnType("int");
+        modelBuilder.Entity<Cliente>().Property(p => p.id_tipoinvestidor).HasColumnType("int");
+        modelBuilder.Entity<Cliente>().Property(p => p.cpf).HasColumnType("varchar").HasMaxLength(11);
+        modelBuilder.Entity<Cliente>().Property(p => p.email).HasColumnType("varchar").HasMaxLength(25);
+        modelBuilder.Entity<Cliente>().Property(p => p.pontuacao).HasColumnType("numeric");
+        modelBuilder.Entity<Cliente>().Property(p => p.endereco).HasColumnType("varchar").HasMaxLength(60);
+        modelBuilder.Entity<Cliente>().Property(p => p.telefone).HasColumnType("char").HasMaxLength(15);
+        modelBuilder.Entity<Cliente>().Property(p => p.senha).HasColumnType("char").HasMaxLength(15);
+        modelBuilder.Entity<Cliente>().Property(p => p.senhaHash).HasColumnType("varchar").HasMaxLength(200);
+        modelBuilder.Entity<Cliente>().Property(p => p.senhaSalt).HasColumnType("varchar").HasMaxLength(200);
 
-        modelBuilder.Entity<Consultor>().HasKey(p => p.id);
+        modelBuilder.Entity<Consultor>().HasKey(p => p.id_consultor);
         modelBuilder.Entity<Consultor>().Property(p => p.nome).HasColumnType("varchar").HasMaxLength(40);
         modelBuilder.Entity<Consultor>().Property(p => p.cpf).HasColumnType("varchar").HasMaxLength(11);
         modelBuilder.Entity<Consultor>().Property(p => p.email).HasColumnType("varchar").HasMaxLength(100);
         modelBuilder.Entity<Consultor>().Property(p => p.telefone).HasColumnType("char").HasMaxLength(15);
-        modelBuilder.Entity<Consultor>().Property(p => p.data_criacao).HasColumnType("date");
+        modelBuilder.Entity<Consultor>().Property(p => p.data_contratacao).HasColumnType("date");
         modelBuilder.Entity<Consultor>().Property(p => p.data_demissao).HasColumnType("date");
         modelBuilder.Entity<Consultor>().Property(p => p.status).HasColumnType("varchar").HasMaxLength(8);
         modelBuilder.Entity<Consultor>().Property(p => p.usuario).HasColumnType("varchar").HasMaxLength(50);
         modelBuilder.Entity<Consultor>().Property(p => p.senha).HasColumnType("varchar").HasMaxLength(100);
+        modelBuilder.Entity<Consultor>().Property(p => p.senhaHash).HasColumnType("varchar").HasMaxLength(200);
+        modelBuilder.Entity<Consultor>().Property(p => p.senhaSalt).HasColumnType("varchar").HasMaxLength(200);
 
         base.OnModelCreating(modelBuilder);
     }
