@@ -7,7 +7,7 @@ public class PrioriDbContext : DbContext
 
     public DbSet<PostBlog> tblPostBlog { get; set; }
     public DbSet<CategoriaBlog> tblCategoriaBlog { get; set; }
-    public DbSet<Consultor> tblConsultor { get; set; }
+    public DbSet<Consultor> tblConsultores { get; set; }
     public DbSet<Cliente> tblClientes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -17,6 +17,7 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<PostBlog>().Property(p => p.id_categoria).HasColumnType("int").HasMaxLength(1);
         modelBuilder.Entity<PostBlog>().Property(p => p.data_criacao).HasColumnType("datetime");
         modelBuilder.Entity<PostBlog>().Property(p => p.titulo).HasColumnType("varchar").HasMaxLength(50);
+        modelBuilder.Entity<PostBlog>().Property(p => p.descricao).HasColumnType("varchar").HasMaxLength(200);
         modelBuilder.Entity<PostBlog>().Property(p => p.conteudo).HasColumnType("varchar").HasMaxLength(2000);
 
         modelBuilder.Entity<CategoriaBlog>().HasKey(p => p.id_categoria);

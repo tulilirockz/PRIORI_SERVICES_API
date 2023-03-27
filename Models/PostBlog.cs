@@ -2,14 +2,15 @@ namespace PRIORI_SERVICES_API.Model
 {
     public class PostBlog
     {
-        public PostBlogDBO toDBO(PostBlog hi)
+        public PostBlogDbo toDBO(PostBlog hi)
         {
-            return new PostBlogDBO
+            return new PostBlogDbo
             {
                 id_autor = hi.id_autor,
                 id_categoria = hi.id_categoria,
                 titulo = hi.titulo,
-                conteudo = hi.conteudo
+                conteudo = hi.conteudo,
+                descricao = hi.descricao
             };
         }
         public int id_post { get; set; }
@@ -17,6 +18,7 @@ namespace PRIORI_SERVICES_API.Model
         public int id_categoria { get; set; }
         public DateTime data_criacao { get; set; }
         public string? titulo { get; set; } = null;
+        public string? descricao { get; set; } = null;
         public string? conteudo { get; set; } = null;
     }
 }
