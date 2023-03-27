@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Blog/[controller]")]
@@ -34,8 +35,9 @@ public class PostsController : ControllerBase
             return Ok(SelectedBlogPost);
     }
 
-    [HttpPost]
+    [HttpPost(Name = "CreateBlogPost"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PostBlogDBO>> CreateBlogPost(PostBlogDBO dbo)
