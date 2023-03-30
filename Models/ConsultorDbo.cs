@@ -1,7 +1,5 @@
-namespace PRIORI_SERVICES_API.Model
+namespace PRIORI_SERVICES_API.Model;
+public class ConsultorDbo : ConsumidorDbo
 {
-    public class ConsultorDbo : ConsumidorDbo
-    {
-        public string? usuario { get; set; }
-    }
+    public string? usuario { get; set; }
 }
