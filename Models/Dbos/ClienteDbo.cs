@@ -1,4 +1,4 @@
-namespace PRIORI_SERVICES_API.Model;
+namespace PRIORI_SERVICES_API.Models.Dbos;
 public class ClienteDbo : ConsumidorDbo
 {
     public int? id_tipoinvestidor { get; set; }
