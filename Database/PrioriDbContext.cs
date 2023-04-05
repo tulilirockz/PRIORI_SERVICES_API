@@ -11,6 +11,7 @@ public class PrioriDbContext : DbContext
     public DbSet<Consultor> tblConsultores { get; set; }
     public DbSet<Cliente> tblClientes { get; set; }
     public DbSet<Atualizacao> tblAtualizacao { get; set; }
+    public DbSet<CarteiraInvestimento> tblCarteiraInvestimentos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -58,6 +59,27 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAtual).HasPrecision(8,2);
         modelBuilder.Entity<Atualizacao>().Property(p => p.rentFixaAtual).HasPrecision(8,4);
         modelBuilder.Entity<Atualizacao>().Property(p => p.rentFixaAtual).HasPrecision(8,4);
+
+        modelBuilder.Entity<CarteiraInvestimento>().HasKey(p => p.id_efetuacao);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.rentabilidade_fixa).HasPrecision(8, 4);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.rentabilidade_variavel).HasPrecision(8, 2);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.data_efetuacao).HasColumnType("date");
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.valor_aplicado).HasPrecision(8, 2);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.data_encerramento).HasColumnType("date");
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.status).HasColumnType("varchar");
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.saldo).HasPrecision(8, 2);
+
+        modelBuilder.Entity<CarteiraInvestimento>()
+            .HasOne<Cliente>(p => p.cliente)
+            .WithOne(p => p.carteira)
+            .HasForeignKey<Cliente>(p => p.id_efetuacao);
+
+       //modelBuilder.Entity<CarteiraInvestimento>()
+       //     .HasMany(p => p.investimentos)
+       //     .WithOne<CarteiraInvestimento>
+       //     (p => p.id_efetuacao); 
+
+
 
         base.OnModelCreating(modelBuilder);
     }
