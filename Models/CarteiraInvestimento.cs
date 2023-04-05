@@ -1,3 +1,4 @@
+using PRIORI_SERVICES_API.Model;
 using PRIORI_SERVICES_API.Models.Dbos;
 
 namespace PRIORI_SERVICES_API.Models
@@ -20,6 +21,8 @@ namespace PRIORI_SERVICES_API.Models
             };
         }
         public int id_efetuacao { get; set; }
+
+        public Cliente cliente { get; set; }
         public int id_cliente_carteira { get; set; }
         public int id_investimento { get; set; }
         public Decimal rentabilidade_fixa { get; set; }
@@ -29,5 +32,7 @@ namespace PRIORI_SERVICES_API.Models
         public DateTime data_encerramento { get; set; }
         public string status { get; set; }
         public Decimal saldo { get; set; }
+
+       // public ICollection<Investimento> investimentos { get; set;}
     }
 }
