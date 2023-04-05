@@ -1,7 +1,24 @@
+using PRIORI_SERVICES_API.Models.Dbos;
+
 namespace PRIORI_SERVICES_API.Models
 {
     public class CarteiraInvestimento
     {
+        public CarteiraInvestimentoDbo toDbo(CarteiraInvestimento ct)
+        {
+            return new CarteiraInvestimentoDbo
+            {
+                id_efetuacao = ct.id_efetuacao,
+                id_cliente_carteira = ct.id_cliente_carteira,
+                id_investimento = ct.id_investimento,
+                rentabilidade_fixa = ct.rentabilidade_fixa,
+                rentabilidade_variavel = ct.rentabilidade_variavel,
+                valor_aplicado = ct.valor_aplicado,
+                data_encerramento = ct.data_encerramento,
+                status = ct.status,
+                saldo = ct.saldo
+            };
+        }
         public int id_efetuacao { get; set; }
         public int id_cliente_carteira { get; set; }
         public int id_investimento { get; set; }
