@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json.Serialization;
+using PRIORI_SERVICES_API.Repository.Interface;
+using PRIORI_SERVICES_API.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,8 @@ builder.Services.AddDbContext<PrioriDbContext>(opt =>
         builder.Configuration["ConnectionString"]
     )
 );
+
+builder.Services.AddScoped<IAtualizacaoRepository, AtualizacaoRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>

@@ -55,6 +55,7 @@ public class PrioriDbContext : DbContext
 
         modelBuilder.Entity<Atualizacao>().HasKey(p => p.id_atualizacao);
         modelBuilder.Entity<Atualizacao>().Property(p => p.id_consultor).HasColumnType("int");
+        modelBuilder.Entity<Atualizacao>().Property(p => p.id_investimento).HasColumnType("int");
         modelBuilder.Entity<Atualizacao>().Property(p => p.data_atualizacao).HasColumnType("date");
         modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAntiga).HasPrecision(8,2);
         modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAtual).HasPrecision(8,2);

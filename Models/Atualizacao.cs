@@ -10,6 +10,7 @@ namespace PRIORI_SERVICES_API.Models
             {
                 id_atualizacao = at.id_atualizacao,
                 id_consultor = at.id_consultor,
+                id_investimento = at.id_investimento,
                 data_atualizacao = at.data_atualizacao,
                 rentFixaAntiga = at.rentFixaAntiga,
                 rentFixaAtual = at.rentFixaAtual,
@@ -19,6 +20,7 @@ namespace PRIORI_SERVICES_API.Models
         }
         public int id_atualizacao { get; set; }
         public int id_consultor { get; set; }
+        public int ?id_investimento { get; set; }
         public DateTime? data_atualizacao { get; set; }
         public Decimal rentFixaAntiga { get; set; }
         public Decimal rentVarAntiga { get; set; }
