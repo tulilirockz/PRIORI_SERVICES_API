@@ -12,6 +12,7 @@ public class PrioriDbContext : DbContext
     public DbSet<Cliente> tblClientes { get; set; }
     public DbSet<Atualizacao> tblAtualizacao { get; set; }
     public DbSet<CarteiraInvestimento> tblCarteiraInvestimentos { get; set; }
+    public DbSet<Investimento> tblInvestimentos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -74,14 +75,25 @@ public class PrioriDbContext : DbContext
             .WithOne(p => p.carteira)
             .HasForeignKey<Cliente>(p => p.id_efetuacao);
 
-        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_investimento).HasColumnType("int");
+        modelBuilder.Entity<CarteiraInvestimento>()
+            .HasOne<Investimento>(p => p.investimento)
+            .WithOne(p => p.carteira)
+            .HasForeignKey<Investimento>(p => p.id_efetuacao);
 
-       //modelBuilder.Entity<CarteiraInvestimento>()
-       //     .HasMany(p => p.investimentos)
-       //     .WithOne<CarteiraInvestimento>
-       //     (p => p.id_efetuacao); 
+        modelBuilder.Entity<Investimento>().HasKey(p => p.id_investimento);
+        modelBuilder.Entity<Investimento>().Property(p => p.id_riscoInvestimento).HasPrecision(18, 0);
+        modelBuilder.Entity<Investimento>().Property(p => p.nome).HasColumnType("varchar");
+        modelBuilder.Entity<Investimento>().Property(p => p.tipo_investimento).HasColumnType("varchar");
+        modelBuilder.Entity<Investimento>().Property(p => p.rentabilidade_fixa).HasPrecision(8,4);
+        modelBuilder.Entity<Investimento>().Property(p => p.rentabilidade_variavel).HasPrecision(8,2);
+        modelBuilder.Entity<Investimento>().Property(p => p.data_atualizacao).HasColumnType("date");
+        modelBuilder.Entity<Investimento>().Property(p => p.vencimento).HasColumnType("date");
+        modelBuilder.Entity<Investimento>().Property(p => p.valor_minimo).HasPrecision(8,2);
+        modelBuilder.Entity<Investimento>().Property(p => p.tempo_minimo).HasPrecision(3,0);
 
-
+        modelBuilder.Entity<Investimento>()
+            .HasOne<CarteiraInvestimento>(p => p.carteira)
+            .WithOne(p => p.investimento);
 
         base.OnModelCreating(modelBuilder);
     }
