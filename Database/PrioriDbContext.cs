@@ -74,6 +74,8 @@ public class PrioriDbContext : DbContext
             .WithOne(p => p.carteira)
             .HasForeignKey<Cliente>(p => p.id_efetuacao);
 
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_investimento).HasColumnType("int");
+
        //modelBuilder.Entity<CarteiraInvestimento>()
        //     .HasMany(p => p.investimentos)
        //     .WithOne<CarteiraInvestimento>
