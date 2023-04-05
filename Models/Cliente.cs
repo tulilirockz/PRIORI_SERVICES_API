@@ -12,8 +12,6 @@ public class Cliente : Consumidor<ClienteDbo, Cliente>
     public float? pontuacao { get; set; }
     public string senha { get; set; } = String.Empty;
 
-    public CarteiraInvestimento carteira { get; set; }
-    public int id_efetuacao { get; set; }
     public override ClienteDbo toDBO(ref Cliente DBO)
     {
         return new ClienteDbo

@@ -69,16 +69,10 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.data_encerramento).HasColumnType("date");
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.status).HasColumnType("varchar");
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.saldo).HasPrecision(8, 2);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_cliente_carteira).HasColumnType("int");
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_investimento).HasColumnType("int");
 
-        modelBuilder.Entity<CarteiraInvestimento>()
-            .HasOne<Cliente>(p => p.cliente)
-            .WithOne(p => p.carteira)
-            .HasForeignKey<Cliente>(p => p.id_efetuacao);
-
-        modelBuilder.Entity<CarteiraInvestimento>()
-            .HasOne<Investimento>(p => p.investimento)
-            .WithOne(p => p.carteira)
-            .HasForeignKey<Investimento>(p => p.id_efetuacao);
+       
 
         modelBuilder.Entity<Investimento>().HasKey(p => p.id_investimento);
         modelBuilder.Entity<Investimento>().Property(p => p.id_riscoInvestimento).HasPrecision(18, 0);
@@ -90,10 +84,6 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<Investimento>().Property(p => p.vencimento).HasColumnType("date");
         modelBuilder.Entity<Investimento>().Property(p => p.valor_minimo).HasPrecision(8,2);
         modelBuilder.Entity<Investimento>().Property(p => p.tempo_minimo).HasPrecision(3,0);
-
-        modelBuilder.Entity<Investimento>()
-            .HasOne<CarteiraInvestimento>(p => p.carteira)
-            .WithOne(p => p.investimento);
 
         base.OnModelCreating(modelBuilder);
     }
