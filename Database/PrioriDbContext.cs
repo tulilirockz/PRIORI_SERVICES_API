@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
+using PRIORI_SERVICES_API.Models;
 
 public class PrioriDbContext : DbContext
 {
@@ -9,6 +10,7 @@ public class PrioriDbContext : DbContext
     public DbSet<CategoriaBlog> tblCategoriaBlog { get; set; }
     public DbSet<Consultor> tblConsultores { get; set; }
     public DbSet<Cliente> tblClientes { get; set; }
+    public DbSet<Atualizacao> tblAtualizacao { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,6 +50,14 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<Consultor>().Property(p => p.senha).HasColumnType("varchar").HasMaxLength(100);
         modelBuilder.Entity<Consultor>().Property(p => p.senhaHash).HasColumnType("varchar").HasMaxLength(200);
         modelBuilder.Entity<Consultor>().Property(p => p.senhaSalt).HasColumnType("varchar").HasMaxLength(200);
+
+        modelBuilder.Entity<Atualizacao>().HasKey(p => p.id_atualizacao);
+        modelBuilder.Entity<Atualizacao>().Property(p => p.id_consultor).HasColumnType("int");
+        modelBuilder.Entity<Atualizacao>().Property(p => p.data_atualizacao).HasColumnType("date");
+        modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAntiga).HasPrecision(8,2);
+        modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAtual).HasPrecision(8,2);
+        modelBuilder.Entity<Atualizacao>().Property(p => p.rentFixaAtual).HasPrecision(8,4);
+        modelBuilder.Entity<Atualizacao>().Property(p => p.rentFixaAtual).HasPrecision(8,4);
 
         base.OnModelCreating(modelBuilder);
     }

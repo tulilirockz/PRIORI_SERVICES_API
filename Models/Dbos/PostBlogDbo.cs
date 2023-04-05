@@ -1,4 +1,4 @@
-namespace PRIORI_SERVICES_API.Model;
+namespace PRIORI_SERVICES_API.Models.Dbos;
 public class PostBlogDbo
 {
     public int id_autor { get; set; }

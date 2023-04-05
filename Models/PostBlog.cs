@@ -1,3 +1,5 @@
+using PRIORI_SERVICES_API.Models.Dbos;
+
 namespace PRIORI_SERVICES_API.Model;
 public class PostBlog
 {
