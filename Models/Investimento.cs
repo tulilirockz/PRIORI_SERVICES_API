@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using PRIORI_SERVICES_API.Models.Dbos;
 
 namespace PRIORI_SERVICES_API.Models
@@ -17,7 +18,7 @@ namespace PRIORI_SERVICES_API.Models
                 data_atualizacao = inv.data_atualizacao,
                 vencimento = inv.vencimento,
                 valor_minimo = inv.valor_minimo,
-                tempo_minimo = inv.tempo_minimo
+                tempo_minimo = inv.tempo_minimo,
             };
         }
         public int id_investimento { get; set; }
@@ -30,5 +31,10 @@ namespace PRIORI_SERVICES_API.Models
         public DateTime vencimento { get; set; }
         public Decimal valor_minimo { get; set; }
         public Decimal tempo_minimo { get; set; }
+
+        [JsonIgnore]
+        public CarteiraInvestimento carteira { get; set; }
+        public int id_efetuacao { get; set; }
+       
     }
 }

@@ -12,5 +12,6 @@ namespace PRIORI_SERVICES_API.Models.Dbos
         public DateTime vencimento { get; set; }
         public Decimal valor_minimo { get; set; }
         public Decimal tempo_minimo { get; set; }
+
     }
 }
