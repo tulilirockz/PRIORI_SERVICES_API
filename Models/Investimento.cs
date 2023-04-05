@@ -31,10 +31,6 @@ namespace PRIORI_SERVICES_API.Models
         public DateTime vencimento { get; set; }
         public Decimal valor_minimo { get; set; }
         public Decimal tempo_minimo { get; set; }
-
-        [JsonIgnore]
-        public CarteiraInvestimento carteira { get; set; }
-        public int id_efetuacao { get; set; }
        
     }
 }
