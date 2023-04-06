@@ -1,11 +1,10 @@
-using Newtonsoft.Json;
 using PRIORI_SERVICES_API.Models.Dbos;
 
 namespace PRIORI_SERVICES_API.Models
 {
     public class Investimento
     {
-        public InvestimentoDbo toDbo (Investimento inv)
+        public InvestimentoDbo toDbo(Investimento inv)
         {
             return new InvestimentoDbo
             {
@@ -31,6 +30,5 @@ namespace PRIORI_SERVICES_API.Models
         public DateTime vencimento { get; set; }
         public Decimal valor_minimo { get; set; }
         public Decimal tempo_minimo { get; set; }
-       
     }
 }

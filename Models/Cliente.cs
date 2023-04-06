@@ -2,6 +2,7 @@ using PRIORI_SERVICES_API.Models;
 using PRIORI_SERVICES_API.Models.Dbos;
 
 namespace PRIORI_SERVICES_API.Model;
+
 public class Cliente : Consumidor<ClienteDbo, Cliente>
 {
     public int id_cliente { get; set; }
