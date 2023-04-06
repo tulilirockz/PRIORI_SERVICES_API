@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Models.Dbos;
 
 namespace PRIORI_SERVICES_API.Controllers;
+
 [Route("api/Blog/[controller]")]
 [ApiController]
 public class PostsController : ControllerBase
