@@ -41,7 +41,7 @@ namespace PRIORI_SERVICES_API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<InvestimentoDbo>> CreateaInvestimento(InvestimentoDbo dbo)
+        public async Task<ActionResult<InvestimentoDbo>> CreateInvestimento(InvestimentoDbo dbo)
         {
             var investimento = new Investimento
             {
