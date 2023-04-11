@@ -1,0 +1,29 @@
+{
+    "name": "C# (.NET)",
+    "image": "mcr.microsoft.com/devcontainers/dotnet:0-7.0",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,Z",
+    "workspaceFolder": "/workspace",
+    "runArgs": [
+        "--userns=keep-id",
+        "--name=metabox",
+        "--network=host"
+    ],
+    "mounts": [
+        "source=${localEnv:HOME}/.gnupg,target=/home/vscode/.gnupg,type=bind,Z"
+    ],
+    "containerUser": "vscode",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csharp",
+                "EditorConfig.EditorConfig",
+                "ms-vsliveshare.vsliveshare",
+                "GitHub.vscode-pull-request-github",
+                "ms-mssql.mssql",
+                "rangav.vscode-thunder-client",
+                "dbaeumer.vscode-eslint"
+            ]
+        }
+    },
+    "postCreateCommand": "find .devcontainer/tasks -iname '*.sh' -exec 'sh' '-c' 'echo -=-=-=-= [ {} ] ; sh {}' ';'"
+}
