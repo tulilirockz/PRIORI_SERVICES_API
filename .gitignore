@@ -2,7 +2,7 @@
 .env
 out
 secrets.json
-!*.example
+start.cmd
 ###################
 # compiled source #
 ###################
