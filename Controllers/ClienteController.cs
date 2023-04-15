@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using PRIORI_SERVICES_API.Util;
+using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Models.Dbos;
 
@@ -47,14 +47,14 @@ public class ClienteController : ControllerBase
         };
 
         return Ok(new JwtSecurityTokenHandler().WriteToken(
-            JwtHandler.GenJWT(_configuration, claims)
+            JwtHandler.GenerateJWTToken(_configuration, claims)
         ));
     }
 
     [HttpPost(Name = "RegisterClient")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> Registrar(ClienteDbo request)
+    public async Task<ActionResult<Cliente>> Registrar(ClienteDbo request, string senha)
     {
 
         Cliente? CheckUserExists = await (from user in _context.tblClientes
@@ -65,17 +65,17 @@ public class ClienteController : ControllerBase
 
         if (CheckUserExists == null ||
             request.email == null ||
-            !request.senha!.Any(char.IsUpper) ||
-            !request.senha!.Any(char.IsSymbol) ||
-            !request.senha!.Any(char.IsNumber) ||
-            request.senha!.Length <= 8)
+            !senha!.Any(char.IsUpper) ||
+            !senha!.Any(char.IsSymbol) ||
+            !senha!.Any(char.IsNumber) ||
+            senha!.Length <= 8)
         {
             return BadRequest(DEFAULT_BAD_REQUEST);
         }
 
         string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
 
-        string senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, senhaSalt);
+        string senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, senhaSalt);
 
         var novoCliente = new Cliente
         {
@@ -159,7 +159,7 @@ public class ClienteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> DeleteCliente(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         Cliente? SelectedCliente = await _context.tblClientes.FindAsync(id);
 

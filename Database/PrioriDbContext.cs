@@ -36,7 +36,6 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<Cliente>().Property(p => p.pontuacao).HasColumnType("numeric");
         modelBuilder.Entity<Cliente>().Property(p => p.endereco).HasColumnType("varchar").HasMaxLength(60);
         modelBuilder.Entity<Cliente>().Property(p => p.telefone).HasColumnType("char").HasMaxLength(15);
-        modelBuilder.Entity<Cliente>().Property(p => p.senha).HasColumnType("char").HasMaxLength(15);
         modelBuilder.Entity<Cliente>().Property(p => p.senhaHash).HasColumnType("varchar").HasMaxLength(200);
         modelBuilder.Entity<Cliente>().Property(p => p.senhaSalt).HasColumnType("varchar").HasMaxLength(200);
 
@@ -49,18 +48,16 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<Consultor>().Property(p => p.data_demissao).HasColumnType("date");
         modelBuilder.Entity<Consultor>().Property(p => p.status).HasColumnType("varchar").HasMaxLength(8);
         modelBuilder.Entity<Consultor>().Property(p => p.usuario).HasColumnType("varchar").HasMaxLength(50);
-        modelBuilder.Entity<Consultor>().Property(p => p.senha).HasColumnType("varchar").HasMaxLength(100);
         modelBuilder.Entity<Consultor>().Property(p => p.senhaHash).HasColumnType("varchar").HasMaxLength(200);
         modelBuilder.Entity<Consultor>().Property(p => p.senhaSalt).HasColumnType("varchar").HasMaxLength(200);
 
         modelBuilder.Entity<Atualizacao>().HasKey(p => p.id_atualizacao);
         modelBuilder.Entity<Atualizacao>().Property(p => p.id_consultor).HasColumnType("int");
-        modelBuilder.Entity<Atualizacao>().Property(p => p.id_investimento).HasColumnType("int");
         modelBuilder.Entity<Atualizacao>().Property(p => p.data_atualizacao).HasColumnType("date");
-        modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAntiga).HasPrecision(8,2);
-        modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAtual).HasPrecision(8,2);
-        modelBuilder.Entity<Atualizacao>().Property(p => p.rentFixaAtual).HasPrecision(8,4);
-        modelBuilder.Entity<Atualizacao>().Property(p => p.rentFixaAtual).HasPrecision(8,4);
+        modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAntiga).HasPrecision(8, 2);
+        modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAtual).HasPrecision(8, 2);
+        modelBuilder.Entity<Atualizacao>().Property(p => p.rentFixaAtual).HasPrecision(8, 4);
+        modelBuilder.Entity<Atualizacao>().Property(p => p.rentFixaAtual).HasPrecision(8, 4);
 
         modelBuilder.Entity<CarteiraInvestimento>().HasKey(p => p.id_efetuacao);
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.rentabilidade_fixa).HasPrecision(8, 4);
@@ -73,6 +70,29 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_cliente_carteira).HasColumnType("int");
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_investimento).HasColumnType("int");
 
+
+
+        modelBuilder.Entity<Investimento>().HasKey(p => p.id_investimento);
+        modelBuilder.Entity<Investimento>().Property(p => p.id_riscoInvestimento).HasPrecision(18, 0);
+        modelBuilder.Entity<Investimento>().Property(p => p.nome).HasColumnType("varchar");
+        modelBuilder.Entity<Investimento>().Property(p => p.tipo_investimento).HasColumnType("varchar");
+        modelBuilder.Entity<Investimento>().Property(p => p.rentabilidade_fixa).HasPrecision(8, 4);
+        modelBuilder.Entity<Investimento>().Property(p => p.rentabilidade_variavel).HasPrecision(8, 2);
+        modelBuilder.Entity<Investimento>().Property(p => p.data_atualizacao).HasColumnType("date");
+        modelBuilder.Entity<Investimento>().Property(p => p.vencimento).HasColumnType("date");
+        modelBuilder.Entity<Investimento>().Property(p => p.valor_minimo).HasPrecision(8, 2);
+        modelBuilder.Entity<Investimento>().Property(p => p.tempo_minimo).HasPrecision(3, 0);
+
+        modelBuilder.Entity<CarteiraInvestimento>().HasKey(p => p.id_efetuacao);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.rentabilidade_fixa).HasPrecision(8, 4);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.rentabilidade_variavel).HasPrecision(8, 2);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.data_efetuacao).HasColumnType("date");
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.valor_aplicado).HasPrecision(8, 2);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.data_encerramento).HasColumnType("date");
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.status).HasColumnType("varchar");
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.saldo).HasPrecision(8, 2);
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_cliente_carteira).HasColumnType("int");
+        modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_investimento).HasColumnType("int");
        
 
         modelBuilder.Entity<Investimento>().HasKey(p => p.id_investimento);

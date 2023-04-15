@@ -1,0 +1,11 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "JWTKey": "senhasuperultradupersecreta aqui!",
+  "AllowedHosts": "*",
+  "ConnectionString": "Server=IP.ADDR.RIGHT.HERE,PORT;DataBase=DTBS;user id=USER;password=PASSWD,trusted_connection=true"
+}

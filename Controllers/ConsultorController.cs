@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using PRIORI_SERVICES_API.Util;
+using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Models.Dbos;
 
@@ -25,38 +25,32 @@ public class ConsultorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Consultor>> Login(string usuario, string senha)
     {
-        Consultor? SelectedConsultor = await (from user in _context.tblConsultores
-                                              where user.usuario == usuario
-                                              select user).SingleAsync();
-
-        string DEFAULT_BAD_REQUEST = "Falha ao fazer login";
+        Consultor? SelectedConsultor = await (from consultor in _context.tblConsultores
+                                              where consultor.usuario == usuario
+                                              select consultor).SingleAsync();
 
         if (SelectedConsultor == null ||
             SelectedConsultor.usuario == null ||
-            SelectedConsultor.status == "INATIVO")
+            SelectedConsultor.status == "INATIVO" ||
+            !BCrypt.Net.BCrypt.Verify(senha, SelectedConsultor.senhaHash))
         {
-            return BadRequest(DEFAULT_BAD_REQUEST);
+            return BadRequest("Falha ao fazer login");
         }
 
-        if (!BCrypt.Net.BCrypt.Verify(senha, SelectedConsultor.senhaHash))
-        {
-            return BadRequest(DEFAULT_BAD_REQUEST);
-        }
-
-        List<Claim> claims = new List<Claim> {
+        var claims = new List<Claim> {
             new Claim(ClaimTypes.Name, SelectedConsultor.email!),
             new Claim(ClaimTypes.Role, "Consultor"),
         };
 
         return Ok(new JwtSecurityTokenHandler().WriteToken(
-                JwtHandler.GenJWT(_configuration, claims)
+                JwtHandler.GenerateJWTToken(_configuration, claims)
         ));
     }
 
     [HttpPost(Name = "RegistrarConsultor"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Consultor>> Registrar(ConsultorDbo request)
+    public async Task<ActionResult<Consultor>> Registrar(ConsultorDbo request, string senha)
     {
 
         bool CheckUserExists = _context.tblConsultores.Any(e => e.usuario == request.usuario);
@@ -65,22 +59,20 @@ public class ConsultorController : ControllerBase
 
         if (CheckUserExists ||
             request.usuario == null ||
-            !request.senha!.Any(char.IsUpper) ||
-            !request.senha!.Any(char.IsSymbol) ||
-            !request.senha!.Any(char.IsNumber) ||
-            request.senha!.Length <= 8)
+            !senha!.Any(char.IsUpper) ||
+            !senha!.Any(char.IsSymbol) ||
+            !senha!.Any(char.IsNumber) ||
+            senha!.Length <= 8)
         {
             return BadRequest(DEFAULT_BAD_REQUEST);
         }
 
         string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
 
-        string senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, senhaSalt);
-
         var novoConsultor = new Consultor
         {
             data_contratacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
-            senhaHash = senhaHash,
+            senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, senhaSalt),
             senhaSalt = senhaSalt,
             cpf = request.cpf,
             email = request.email,

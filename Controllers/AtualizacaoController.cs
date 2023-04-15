@@ -15,7 +15,7 @@ namespace PRIORI_SERVICES_API.Controllers
     public class AtualizacaoController : ControllerBase
     {
         private readonly IAtualizacaoRepository _repository;
-        public AtualizacaoController(IAtualizacaoRepository repository )
+        public AtualizacaoController(IAtualizacaoRepository repository)
         {
             _repository = repository;
         }
@@ -50,20 +50,18 @@ namespace PRIORI_SERVICES_API.Controllers
         {
             var novaAtualizacao = new Atualizacao
             {
-                id_atualizacao = dbo.id_atualizacao,
                 id_consultor = dbo.id_consultor,
-                id_investimento = dbo.id_investimento,
                 data_atualizacao = dbo.data_atualizacao,
                 rentVarAtual = dbo.rentVarAtual,
                 rentVarAntiga = dbo.rentVarAntiga,
                 rentFixaAntiga = dbo.rentFixaAntiga,
                 rentFixaAtual = dbo.rentFixaAtual
             };
-          
+
 
             try
             {
-               await _repository.Create(novaAtualizacao);
+                await _repository.Create(novaAtualizacao);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -74,8 +72,8 @@ namespace PRIORI_SERVICES_API.Controllers
                 nameof(GetAtualizacao),
             new
             {
-                    id_atualizacao = novaAtualizacao.id_atualizacao
-                },
+                id_atualizacao = novaAtualizacao.id_atualizacao
+            },
                 novaAtualizacao.toDbo(novaAtualizacao));
         }
 
@@ -112,7 +110,7 @@ namespace PRIORI_SERVICES_API.Controllers
 
             if (atualizacao == null)
                 return BadRequest();
-    
+
             atualizacao.id_atualizacao = atualizacao.id_atualizacao;
 
             try

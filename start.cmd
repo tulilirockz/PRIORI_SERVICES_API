@@ -1,0 +1,9 @@
+@echo off
+
+set PRIORI_DATABASE_PORT="1433"
+set PRIORI_DATABASE_NAME="Priori"
+set PRIORI_DATABASE_USER="sa"
+set PRIORI_DATABASE_IP=""
+set PRIORI_DATABASE_PASSWORD=""
+
+dotnet watch

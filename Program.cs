@@ -17,9 +17,25 @@ builder.Services.AddControllers()
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<PrioriDbContext>(opt =>
-    opt.UseSqlServer(
-        builder.Configuration["ConnectionString"]
-    )
+{
+    var database_args = new Dictionary<string, string?> {
+        { "port", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_PORT") ?? "1433" },
+        { "ip", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_IP") ?? "localhost"},
+        { "name", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_NAME") ?? "Priori"},
+        { "user", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_USER")},
+        { "pass", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_PASSWORD") }
+    };
+
+    foreach (string? item in database_args.Values)
+    {
+        if (item == null)
+        {
+            throw new ArgumentException("Failure to run the API, check your whether your environment variables are set properly.");
+        }
+    }
+
+    opt.UseSqlServer($"{database_args["ip"]},{database_args["port"]};DataBase={database_args["name"]};user id={database_args["user"]};password={database_args["pass"]},trusted_connection=true");
+}
 );
 
 builder.Services.AddScoped<IAtualizacaoRepository, AtualizacaoRepository>();
