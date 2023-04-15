@@ -1,6 +1,13 @@
 using PRIORI_SERVICES_API.Model;
 using System.Text.Json.Serialization;
 namespace PRIORI_SERVICES_API.Models;
+using PRIORI_SERVICES_API.Models.Dbos;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+[Table("tblCarteiraInvestimentos")]
+[PrimaryKey(nameof(id_investimento))]
 public class CarteiraInvestimento
 {
     public CarteiraInvestimentoDbo toDbo(CarteiraInvestimento ct)
@@ -19,21 +26,34 @@ public class CarteiraInvestimento
             saldo = ct.saldo
         };
     }
+    [Column(TypeName = "int")]
     public int id_efetuacao { get; set; }
 
     [JsonIgnore]
     public Cliente? cliente { get; set; }
+    [Column(TypeName = "int")]
+    [ForeignKey("tblClientes")]
     public int id_cliente_carteira { get; set; }
 
     [JsonIgnore]
     public Investimento? investimento { get; set; }
+    [Column(TypeName = "int")]
+    [ForeignKey("tblInvestimentos")]
     public int id_investimento { get; set; }
 
+    [Column(TypeName = "numeric(8,4)")]
+    [ForeignKey("tblInvestimentos")]
     public Decimal rentabilidade_fixa { get; set; }
+    [Column(TypeName = "numeric(8,2)")]
     public Decimal rentabilidade_variavel { get; set; }
+    [Column(TypeName = "datetime")]
     public DateTime data_efetuacao { get; set; }
+    [Column(TypeName = "numeric(8,2)")]
     public Decimal valor_aplicado { get; set; }
+    [Column(TypeName = "datetime")]
     public DateTime? data_encerramento { get; set; }
+    [Column(TypeName = "varchar(8)")]
     public string? status { get; set; }
+    [Column(TypeName = "numeric(8,2)")]
     public Decimal saldo { get; set; }
 }

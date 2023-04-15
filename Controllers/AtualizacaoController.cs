@@ -1,12 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PRIORI_SERVICES_API.Model;
 using PRIORI_SERVICES_API.Models;
 using PRIORI_SERVICES_API.Models.Dbos;
 using PRIORI_SERVICES_API.Repository.Interface;
-using System.Data;
 
 namespace PRIORI_SERVICES_API.Controllers
 {

@@ -1,13 +1,23 @@
 using PRIORI_SERVICES_API.Models.Dbos;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace PRIORI_SERVICES_API.Model;
 
+[PrimaryKey(nameof(id_consultor))]
+[Table("tblConsultores")]
 public class Consultor : Consumidor<ConsultorDbo, Consultor>
 {
+    [Column(TypeName = "int"), Required]
     public int id_consultor { get; set; }
+
+    [Column(TypeName = "date")]
     public DateTime data_contratacao { get; set; }
+    [Column(TypeName = "date")]
     public DateTime? data_demissao { get; set; }
-    public string? usuario { get; set; }
+    [Column(TypeName = "varchar(50)"), Required]
+    public string usuario { get; set; } = String.Empty;
     public override ConsultorDbo toDBO(ref Consultor dbo)
     {
         return new ConsultorDbo
@@ -15,7 +25,6 @@ public class Consultor : Consumidor<ConsultorDbo, Consultor>
             usuario = dbo.usuario,
             cpf = dbo.cpf,
             email = dbo.email,
-            nome = dbo.nome,
             telefone = dbo.telefone
         };
     }

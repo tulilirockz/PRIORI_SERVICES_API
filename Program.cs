@@ -26,15 +26,15 @@ builder.Services.AddDbContext<PrioriDbContext>(opt =>
         { "pass", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_PASSWORD") }
     };
 
-    foreach (string? item in database_vars.Values)
+    foreach (string? item in database_vars.Keys)
     {
-        if (item == null)
+        if (database_vars[item] == null)
         {
-            throw new ArgumentException("Failure to run the API, check your whether your environment variables are set properly.");
+            throw new ArgumentException($"Failure to run the API, check your whether your environment variables are set properly: Missing {item}");
         }
     }
 
-    opt.UseSqlServer($"Server={database_vars["ip"]},{database_vars["port"]};database={database_vars["name"]};user id={database_vars["user"]};password={database_vars["pass"]};Encrypt=True;TrustServerCertificate=True");
+    opt.UseSqlServer($"Server={database_vars["ip"]},{database_vars["port"]};DataBase={database_vars["name"]};user id={database_vars["user"]};password={database_vars["pass"]};Encrypt=True;TrustServerCertificate=True");
 }
 );
 
@@ -60,7 +60,7 @@ builder.Services.AddAuthentication().AddJwtBearer(opt =>
         ValidateIssuerSigningKey = true,
         ValidateAudience = false,
         ValidateIssuer = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(System.Environment.GetEnvironmentVariable("PRIORI_SECRET_JWT_KEY")! ?? "5UP3r53Cr37K3Y4M06U55U55Y84115"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(System.Environment.GetEnvironmentVariable("PRIORI_SECRET_JWT_KEY") ?? "s5nh2s1c2t41234l33t"))
     };
 });
 
