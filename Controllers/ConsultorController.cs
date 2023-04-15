@@ -77,7 +77,6 @@ public class ConsultorController : ControllerBase
             cpf = request.cpf,
             email = request.email,
             usuario = request.usuario,
-            nome = request.nome,
             telefone = request.telefone,
             status = "ATIVO"
         };
@@ -142,7 +141,6 @@ public class ConsultorController : ControllerBase
 
         SelectedConsultor.cpf = ConsultorDbo.cpf;
         SelectedConsultor.email = ConsultorDbo.email;
-        SelectedConsultor.nome = ConsultorDbo.nome;
         SelectedConsultor.telefone = ConsultorDbo.telefone;
 
         if (senha != null)

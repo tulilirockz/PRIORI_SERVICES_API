@@ -41,7 +41,7 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PostBlogDbo>> CreateBlogPost(PostBlogDbo dbo)
+    public async Task<ActionResult<PostBlogDBO>> CreateBlogPost(PostBlogDBO dbo)
     {
         var novoPost = new PostBlog
         {
@@ -100,7 +100,7 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AlterBlogPost(int id, PostBlogDbo BlogPost)
+    public async Task<IActionResult> AlterBlogPost(int id, PostBlogDBO BlogPost)
     {
         PostBlog? SelectedBlogPost = await _context.tblPostBlog.FindAsync(id);
 

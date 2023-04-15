@@ -1,5 +1,5 @@
 namespace PRIORI_SERVICES_API.Models.Dbos;
-public class PostBlogDbo
+public class PostBlogDBO
 {
     public int id_autor { get; set; }
     public int id_categoria { get; set; }

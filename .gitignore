@@ -2,7 +2,6 @@
 .env
 out
 secrets.json
-appsettings*
 !*.example
 ###################
 # compiled source #
