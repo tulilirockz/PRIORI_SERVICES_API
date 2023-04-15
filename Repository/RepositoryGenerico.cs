@@ -55,12 +55,11 @@ namespace PRIORI_SERVICES_API.Repository
             }
         }
 
-        public async Task<TEntity> GetById(int id)
+        public async Task<TEntity?> GetById(int id)
         {
             try
             {
-                var entity = await _contexto.Set<TEntity>().FindAsync(id);
-                return entity;
+                return await _contexto.Set<TEntity>().FindAsync(id);
             }
             catch (Exception ex)
             {
@@ -83,6 +82,6 @@ namespace PRIORI_SERVICES_API.Repository
             }
         }
 
-  
+
     }
 }
