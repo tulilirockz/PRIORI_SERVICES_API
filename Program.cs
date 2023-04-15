@@ -18,7 +18,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<PrioriDbContext>(opt =>
 {
-    var database_args = new Dictionary<string, string?> {
+    var database_vars = new Dictionary<string, string?> {
         { "port", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_PORT") ?? "1433" },
         { "ip", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_IP") ?? "localhost"},
         { "name", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_NAME") ?? "Priori"},
@@ -26,7 +26,7 @@ builder.Services.AddDbContext<PrioriDbContext>(opt =>
         { "pass", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_PASSWORD") }
     };
 
-    foreach (string? item in database_args.Values)
+    foreach (string? item in database_vars.Values)
     {
         if (item == null)
         {
@@ -34,7 +34,7 @@ builder.Services.AddDbContext<PrioriDbContext>(opt =>
         }
     }
 
-    opt.UseSqlServer($"{database_args["ip"]},{database_args["port"]};DataBase={database_args["name"]};user id={database_args["user"]};password={database_args["pass"]},trusted_connection=true");
+    opt.UseSqlServer($"Server={database_vars["ip"]},{database_vars["port"]};database={database_vars["name"]};user id={database_vars["user"]};password={database_vars["pass"]};Encrypt=True;TrustServerCertificate=True");
 }
 );
 
@@ -60,7 +60,7 @@ builder.Services.AddAuthentication().AddJwtBearer(opt =>
         ValidateIssuerSigningKey = true,
         ValidateAudience = false,
         ValidateIssuer = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWTKey").Value!))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(System.Environment.GetEnvironmentVariable("PRIORI_SECRET_JWT_KEY")! ?? "5UP3r53Cr37K3Y4M06U55U55Y84115"))
     };
 });
 
