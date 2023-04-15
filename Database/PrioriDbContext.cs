@@ -36,7 +36,6 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<Cliente>().Property(p => p.pontuacao).HasColumnType("numeric");
         modelBuilder.Entity<Cliente>().Property(p => p.endereco).HasColumnType("varchar").HasMaxLength(60);
         modelBuilder.Entity<Cliente>().Property(p => p.telefone).HasColumnType("char").HasMaxLength(15);
-        modelBuilder.Entity<Cliente>().Property(p => p.senha).HasColumnType("char").HasMaxLength(15);
         modelBuilder.Entity<Cliente>().Property(p => p.senhaHash).HasColumnType("varchar").HasMaxLength(200);
         modelBuilder.Entity<Cliente>().Property(p => p.senhaSalt).HasColumnType("varchar").HasMaxLength(200);
 
@@ -49,13 +48,11 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<Consultor>().Property(p => p.data_demissao).HasColumnType("date");
         modelBuilder.Entity<Consultor>().Property(p => p.status).HasColumnType("varchar").HasMaxLength(8);
         modelBuilder.Entity<Consultor>().Property(p => p.usuario).HasColumnType("varchar").HasMaxLength(50);
-        modelBuilder.Entity<Consultor>().Property(p => p.senha).HasColumnType("varchar").HasMaxLength(100);
         modelBuilder.Entity<Consultor>().Property(p => p.senhaHash).HasColumnType("varchar").HasMaxLength(200);
         modelBuilder.Entity<Consultor>().Property(p => p.senhaSalt).HasColumnType("varchar").HasMaxLength(200);
 
         modelBuilder.Entity<Atualizacao>().HasKey(p => p.id_atualizacao);
         modelBuilder.Entity<Atualizacao>().Property(p => p.id_consultor).HasColumnType("int");
-        modelBuilder.Entity<Atualizacao>().Property(p => p.id_investimento).HasColumnType("int");
         modelBuilder.Entity<Atualizacao>().Property(p => p.data_atualizacao).HasColumnType("date");
         modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAntiga).HasPrecision(8, 2);
         modelBuilder.Entity<Atualizacao>().Property(p => p.rentVarAtual).HasPrecision(8, 2);
@@ -96,7 +93,6 @@ public class PrioriDbContext : DbContext
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.saldo).HasPrecision(8, 2);
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_cliente_carteira).HasColumnType("int");
         modelBuilder.Entity<CarteiraInvestimento>().Property(p => p.id_investimento).HasColumnType("int");
-
        
 
         modelBuilder.Entity<Investimento>().HasKey(p => p.id_investimento);

@@ -22,8 +22,8 @@ namespace PRIORI_SERVICES_API.Models
         }
         public int id_investimento { get; set; }
         public Decimal id_riscoInvestimento { get; set; }
-        public string nome { get; set; }
-        public string tipo_investimento { get; set; }
+        public string? nome { get; set; }
+        public string? tipo_investimento { get; set; }
         public Decimal rentabilidade_fixa { get; set; }
         public Decimal rentabilidade_variavel { get; set; }
         public DateTime data_atualizacao { get; set; }

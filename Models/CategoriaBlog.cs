@@ -4,11 +4,11 @@ namespace PRIORI_SERVICES_API.Model;
 
 public class CategoriaBlog
 {
-    public CategoriaBlogDBO toDBO(CategoriaBlog hi)
+    public CategoriaBlogDBO toDBO(CategoriaBlog dbo)
     {
         return new CategoriaBlogDBO
         {
-            nome_categoria = hi.nome_categoria
+            nome_categoria = dbo.nome_categoria
         };
     }
     public int id_categoria { get; set; }

@@ -7,7 +7,6 @@ public class Atualizacao
     {
         return new AtualizacaoDbo
         {
-            id_atualizacao = at.id_atualizacao,
             id_consultor = at.id_consultor,
             data_atualizacao = at.data_atualizacao,
             rentFixaAntiga = at.rentFixaAntiga,

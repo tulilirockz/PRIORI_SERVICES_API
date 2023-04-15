@@ -24,11 +24,11 @@ public class CarteiraInvestimento
     public int id_efetuacao { get; set; }
 
     [JsonIgnore]
-    public Cliente cliente { get; set; }
+    public Cliente? cliente { get; set; }
     public int id_cliente_carteira { get; set; }
 
     [JsonIgnore]
-    public Investimento investimento { get; set; }
+    public Investimento? investimento { get; set; }
     public int id_investimento { get; set; }
 
     public Decimal rentabilidade_fixa { get; set; }
