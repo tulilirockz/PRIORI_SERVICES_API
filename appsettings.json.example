@@ -6,5 +6,6 @@
     }
   },
   "JWTKey": "senhasuperultradupersecreta aqui!",
-  "AllowedHosts": "*"
+  "AllowedHosts": "*",
+  "ConnectionString": "Server=IP.ADDR.RIGHT.HERE,PORT;DataBase=DTBS;user id=USER;password=PASSWD,trusted_connection=true"
 }
