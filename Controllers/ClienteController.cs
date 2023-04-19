@@ -56,14 +56,18 @@ public class ClienteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Cliente>> Registrar(ClienteDbo request, string senha)
     {
-
-        Cliente? CheckUserExists = await (from user in _context.tblClientes
+        Cliente? CheckUserExists = null;
+        try {
+            CheckUserExists = await (from user in _context.tblClientes
                                           where user.email == request.email
                                           select user).SingleAsync();
-
+        } catch (Exception) {
+            CheckUserExists = null;
+        }
+        
         var DEFAULT_BAD_REQUEST = "Falha ao registrar usuário";
 
-        if (CheckUserExists == null ||
+        if (CheckUserExists != null ||
             request.email == null ||
             !senha!.Any(char.IsUpper) ||
             !senha!.Any(char.IsSymbol) ||
@@ -99,7 +103,7 @@ public class ClienteController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest(DEFAULT_BAD_REQUEST);
+            return BadRequest("mogus");
         }
 
         return CreatedAtAction(

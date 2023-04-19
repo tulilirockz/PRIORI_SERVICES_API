@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0](https://github.com/Priori-Services/API/compare/v1.0.0...v1.1.0) (2023-04-15)
+
+
+### Features
+
+* Data Annotations ([#13](https://github.com/Priori-Services/API/issues/13)) ([20e9e70](https://github.com/Priori-Services/API/commit/20e9e7073d442249e3eaf28bcb4379ff472ce60e))
+* README descritivo mostrando como utilizar o projeto corretamente ([c413f9b](https://github.com/Priori-Services/API/commit/c413f9bf5fa149d0dfc84932759755e7b1c345e0))
+
+
+### Bug Fixes
+
+* implementar connection string e JWT key  corretamente ([bd3d88d](https://github.com/Priori-Services/API/commit/bd3d88dc1503acbd4f30408df5bc707b99a66b0c))
+* mover start p/ example para que não possam ocorrer pushes incorretos ([94940e3](https://github.com/Priori-Services/API/commit/94940e38521bc5ddee70a7263d88246b072b6d13))
+* resolvendo comflito model CarteiraInvestimento ([#11](https://github.com/Priori-Services/API/issues/11)) ([a539ee5](https://github.com/Priori-Services/API/commit/a539ee519f0e47d3326571d2b37aed84dbe24e2f))
+
 ## 1.0.0 (2023-04-15)
 
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace PRIORI_SERVICES_API.Model;
 
 [PrimaryKey(nameof(id_cliente))]
-[Table("tblCliente")]
+[Table("tblClientes")]
 public class Cliente : Consumidor<ClienteDbo, Cliente>
 {
     [Column(TypeName = "int")]
