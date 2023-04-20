@@ -18,23 +18,15 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<PrioriDbContext>(opt =>
 {
-    var database_vars = new Dictionary<string, string?> {
-        { "port", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_PORT") ?? "1433" },
-        { "ip", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_IP") ?? "localhost"},
-        { "name", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_NAME") ?? "Priori"},
-        { "user", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_USER")},
-        { "pass", System.Environment.GetEnvironmentVariable("PRIORI_DATABASE_PASSWORD") }
-    };
-
-    foreach (string? item in database_vars.Keys)
+    foreach (var item in typeof(APIConfiguration).GetFields())
     {
-        if (database_vars[item] == null)
+        if (item.GetValue(null) == null)
         {
             throw new ArgumentException($"Failure to run the API, check your whether your environment variables are set properly: Missing {item}");
         }
     }
 
-    opt.UseSqlServer($"Server={database_vars["ip"]},{database_vars["port"]};DataBase={database_vars["name"]};user id={database_vars["user"]};password={database_vars["pass"]};Encrypt=True;TrustServerCertificate=True");
+    opt.UseSqlServer($"Server={APIConfiguration.PRIORI_DATABASE_IP},{APIConfiguration.PRIORI_DATABASE_PORT};DataBase={APIConfiguration.PRIORI_DATABASE_NAME};user id={APIConfiguration.PRIORI_DATABASE_NAME};password={APIConfiguration.PRIORI_DATABASE_PASSWORD};Encrypt=True;TrustServerCertificate=True");
 }
 );
 
@@ -60,7 +52,7 @@ builder.Services.AddAuthentication().AddJwtBearer(opt =>
         ValidateIssuerSigningKey = true,
         ValidateAudience = false,
         ValidateIssuer = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(System.Environment.GetEnvironmentVariable("PRIORI_SECRET_JWT_KEY") ?? "s5nh2s1c2t41234l33t"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(APIConfiguration.PRIORI_SECRET_JWT_KEY))
     };
 });
 
