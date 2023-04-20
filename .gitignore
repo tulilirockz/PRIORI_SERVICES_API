@@ -81,3 +81,4 @@ _[Ss]cripts
 *.dot[Cc]over
 appsettings.json
 appsettings.Development.json
+start.sh
