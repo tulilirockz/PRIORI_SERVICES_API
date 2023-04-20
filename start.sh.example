@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+export PRIORI_DATABASE_PASSWORD="_ScoobyDooby23"
+export PRIORI_DATABASE_USER="sa"
+export PRIORI_DATABASE_PORT="1433"
+export PRIORI_DATABASE_IP="localhost"
+export PRIORI_DATABASE_NAME="Priori"
+export PRIORI_SECRET_JWT_KEY="senhasuperultradupersecretaaqui!"
+
+dotnet watch
