@@ -7,7 +7,7 @@ namespace PRIORI_SERVICES_API.Model;
 
 [PrimaryKey(nameof(id_consultor))]
 [Table("tblConsultores")]
-public class Consultor : Consumidor<ConsultorDbo, Consultor>
+public class Consultor : Consumidor<ConsultorDBO, Consultor>
 {
     [Column(TypeName = "int"), Required]
     public int id_consultor { get; set; }
@@ -18,9 +18,9 @@ public class Consultor : Consumidor<ConsultorDbo, Consultor>
     public DateTime? data_demissao { get; set; }
     [Column(TypeName = "varchar(50)"), Required]
     public string usuario { get; set; } = String.Empty;
-    public override ConsultorDbo toDBO(ref Consultor dbo)
+    public override ConsultorDBO toDBO(ref Consultor dbo)
     {
-        return new ConsultorDbo
+        return new ConsultorDBO
         {
             usuario = dbo.usuario,
             cpf = dbo.cpf,

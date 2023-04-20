@@ -9,9 +9,9 @@ namespace PRIORI_SERVICES_API.Models;
 [Table("tblInvestimentos")]
 public class Investimento
 {
-    public InvestimentoDbo toDbo(Investimento inv)
+    public InvestimentoDBO toDbo(Investimento inv)
     {
-        return new InvestimentoDbo
+        return new InvestimentoDBO
         {
             id_investimento = inv.id_investimento,
             id_riscoInvestimento = inv.id_riscoInvestimento,
