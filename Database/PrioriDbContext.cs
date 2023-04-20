@@ -8,13 +8,13 @@ public class PrioriDbContext : DbContext
     {
     }
 
-    public DbSet<PostBlog> tblPostBlog { get; set; }
-    public DbSet<CategoriaBlog> tblCategoriaBlog { get; set; }
-    public DbSet<Consultor> tblConsultores { get; set; }
-    public DbSet<Cliente> tblClientes { get; set; }
-    public DbSet<Atualizacao> tblAtualizacao { get; set; }
-    public DbSet<CarteiraInvestimento> tblCarteiraInvestimentos { get; set; }
-    public DbSet<Investimento> tblInvestimentos { get; set; }
+    public DbSet<PostBlog> tblPostBlog { get; set; } = null!;
+    public DbSet<CategoriaBlog> tblCategoriaBlog { get; set; } = null!;
+    public DbSet<Consultor> tblConsultores { get; set; } = null!;
+    public DbSet<Cliente> tblClientes { get; set; } = null!;
+    public DbSet<Atualizacao> tblAtualizacao { get; set; } = null!;
+    public DbSet<CarteiraInvestimento> tblCarteiraInvestimentos { get; set; } = null!;
+    public DbSet<Investimento> tblInvestimentos { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
