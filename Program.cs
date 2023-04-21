@@ -26,7 +26,7 @@ builder.Services.AddDbContext<PrioriDbContext>(opt =>
         }
     }
 
-    opt.UseSqlServer($"Server={APIConfiguration.PRIORI_DATABASE_IP},{APICoResponseResponsenfiguration.PRIORI_DATABASE_PORT};DataBase={APIConfiguration.PRIORI_DATABASE_NAME};user id={APIConfiguration.PRIORI_DATABASE_USER};password={APIConfiguration.PRIORI_DATABASE_PASSWORD};Encrypt=True;TrustServerCertificate=True");
+    opt.UseSqlServer($"Server={APIConfiguration.PRIORI_DATABASE_IP},{APIConfiguration.PRIORI_DATABASE_PORT};DataBase={APIConfiguration.PRIORI_DATABASE_NAME};user id={APIConfiguration.PRIORI_DATABASE_USER};password={APIConfiguration.PRIORI_DATABASE_PASSWORD};Encrypt=True;TrustServerCertificate=True");
 }
 );
 
