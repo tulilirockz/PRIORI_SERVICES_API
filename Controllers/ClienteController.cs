@@ -50,17 +50,17 @@ public class ClienteController : ControllerBase
     [HttpPost(Name = "RegisterClient")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> Registrar(ClienteDBO request)
+    public async Task<ActionResult<Cliente>> Registrar(ClienteDBO request, string senha)
     {
-        Cliente? CheckUserExists = await (from user in _context.tblClientes where user.email == request.email select user).SingleAsync();
+        var UserExists = _context.tblClientes.Any(e => e.email == request.email);
 
         var DEFAULT_BAD_REQUEST = "Falha ao registrar usuário";
 
-        if (CheckUserExists != null ||
+        if (UserExists ||
             request.email == null ||
-            !request.senha!.Any(char.IsUpper) ||
-            !request.senha!.Any(char.IsNumber) ||
-            request.senha!.Length <= 8)
+            !senha!.Any(char.IsUpper) ||
+            !senha!.Any(char.IsNumber) ||
+            senha!.Length <= 8)
         {
             return BadRequest(DEFAULT_BAD_REQUEST);
         }
@@ -73,7 +73,7 @@ public class ClienteController : ControllerBase
             id_consultor = request.id_consultor,
             id_tipoinvestidor = request.id_tipoinvestidor,
             endereco = request.endereco,
-            senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, senhaSalt),
+            senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, senhaSalt),
             senhaSalt = senhaSalt,
             cpf = request.cpf,
             email = request.email,
