@@ -9,9 +9,9 @@ namespace PRIORI_SERVICES_API.Models;
 [PrimaryKey(nameof(id_atualizacao))]
 public class Atualizacao
 {
-    public AtualizacaoDbo toDbo(Atualizacao at)
+    public AtualizacaoDBO toDbo(Atualizacao at)
     {
-        return new AtualizacaoDbo
+        return new AtualizacaoDBO
         {
             id_consultor = at.id_consultor,
             data_atualizacao = at.data_atualizacao,

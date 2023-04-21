@@ -1,4 +1,5 @@
 .vs
+.vs/*
 .env
 out
 secrets.json
@@ -80,3 +81,4 @@ _[Ss]cripts
 *.dot[Cc]over
 appsettings.json
 appsettings.Development.json
+start.sh

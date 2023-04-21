@@ -42,7 +42,7 @@ namespace PRIORI_SERVICES_API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Atualizacao>> CreateAtualizacao(AtualizacaoDbo dbo)
+        public async Task<ActionResult<Atualizacao>> CreateAtualizacao(AtualizacaoDBO dbo)
         {
             var novaAtualizacao = new Atualizacao
             {
@@ -100,7 +100,7 @@ namespace PRIORI_SERVICES_API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AlterAtualizacao(int id, AtualizacaoDbo request)
+        public async Task<IActionResult> AlterAtualizacao(int id, AtualizacaoDBO request)
         {
             Atualizacao? atualizacao = await _repository.GetById(id);
 

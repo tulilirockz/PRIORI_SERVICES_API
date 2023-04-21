@@ -7,7 +7,7 @@ namespace PRIORI_SERVICES_API.Model;
 
 [PrimaryKey(nameof(id_cliente))]
 [Table("tblClientes")]
-public class Cliente : Consumidor<ClienteDbo, Cliente>
+public class Cliente : Consumidor<ClienteDBO, Cliente>
 {
     [Column(TypeName = "int")]
     public int id_cliente { get; set; }
@@ -24,9 +24,9 @@ public class Cliente : Consumidor<ClienteDbo, Cliente>
     [Column(TypeName = "numeric")]
     public float? pontuacao { get; set; }
 
-    public override ClienteDbo toDBO(ref Cliente DBO)
+    public override ClienteDBO toDBO(ref Cliente DBO)
     {
-        return new ClienteDbo
+        return new ClienteDBO
         {
             cpf = DBO.cpf,
             email = DBO.email,

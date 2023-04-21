@@ -28,20 +28,16 @@ public class ClienteController : ControllerBase
         Cliente? CheckUserExists = await (from user in _context.tblClientes
                                           where user.email == email
                                           select user).SingleAsync();
-        var DEFAULT_BAD_REQUEST = "Falha ao fazer login";
 
         if (CheckUserExists == null ||
-            CheckUserExists.email == null)
+            CheckUserExists.email == null ||
+            CheckUserExists.status == "INATIVO" ||
+            !BCrypt.Net.BCrypt.Verify(senha, CheckUserExists.senhaHash))
         {
-            return BadRequest(DEFAULT_BAD_REQUEST);
+            return BadRequest("Falha ao fazer login");
         }
 
-        if (!BCrypt.Net.BCrypt.Verify(senha, CheckUserExists.senhaHash))
-        {
-            return BadRequest(DEFAULT_BAD_REQUEST);
-        }
-
-        List<Claim> claims = new List<Claim> {
+        var claims = new List<Claim> {
             new Claim(ClaimTypes.Name, CheckUserExists.email!),
             new Claim(ClaimTypes.Role, "User"),
         };
@@ -54,23 +50,15 @@ public class ClienteController : ControllerBase
     [HttpPost(Name = "RegisterClient")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> Registrar(ClienteDbo request, string senha)
+    public async Task<ActionResult<Cliente>> Registrar(ClienteDBO request, string senha)
     {
-        Cliente? CheckUserExists = null;
-        try {
-            CheckUserExists = await (from user in _context.tblClientes
-                                          where user.email == request.email
-                                          select user).SingleAsync();
-        } catch (Exception) {
-            CheckUserExists = null;
-        }
-        
+        var UserExists = _context.tblClientes.Any(e => e.email == request.email);
+
         var DEFAULT_BAD_REQUEST = "Falha ao registrar usuário";
 
-        if (CheckUserExists != null ||
+        if (UserExists ||
             request.email == null ||
             !senha!.Any(char.IsUpper) ||
-            !senha!.Any(char.IsSymbol) ||
             !senha!.Any(char.IsNumber) ||
             senha!.Length <= 8)
         {
@@ -79,15 +67,13 @@ public class ClienteController : ControllerBase
 
         string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
 
-        string senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, senhaSalt);
-
         var novoCliente = new Cliente
         {
             data_adesao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
             id_consultor = request.id_consultor,
             id_tipoinvestidor = request.id_tipoinvestidor,
             endereco = request.endereco,
-            senhaHash = senhaHash,
+            senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, senhaSalt),
             senhaSalt = senhaSalt,
             cpf = request.cpf,
             email = request.email,
@@ -120,7 +106,7 @@ public class ClienteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AlterClient(int id, ClienteDbo request, string? senha, int? pontuacao)
+    public async Task<IActionResult> AlterClient(int id, ClienteDBO request, string? senha, int? pontuacao)
     {
         Cliente? SelectedClient = await _context.tblClientes.FindAsync(id);
 

@@ -50,7 +50,7 @@ public class ConsultorController : ControllerBase
     [HttpPost(Name = "RegistrarConsultor"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Consultor>> Registrar(ConsultorDbo request, string senha)
+    public async Task<ActionResult<Consultor>> Registrar(ConsultorDBO request, string senha)
     {
 
         bool CheckUserExists = _context.tblConsultores.Any(e => e.usuario == request.usuario);
@@ -132,7 +132,7 @@ public class ConsultorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AlterConsultor(int id, ConsultorDbo ConsultorDbo, string? senha)
+    public async Task<IActionResult> AlterConsultor(int id, ConsultorDBO ConsultorDbo, string? senha)
     {
         Consultor? SelectedConsultor = await _context.tblConsultores.FindAsync(id);
 

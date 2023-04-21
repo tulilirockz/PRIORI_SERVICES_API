@@ -30,7 +30,7 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<CarteiraInvestimentoDbo>> Create(CarteiraInvestimentoDbo dbo)
+    public async Task<ActionResult<CarteiraInvestimentoDBO>> Create(CarteiraInvestimentoDBO dbo)
     {
         var carteira = new CarteiraInvestimento
         {

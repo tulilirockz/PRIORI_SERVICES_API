@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 [PrimaryKey(nameof(id_investimento))]
 public class CarteiraInvestimento
 {
-    public CarteiraInvestimentoDbo toDbo(CarteiraInvestimento ct)
+    public CarteiraInvestimentoDBO toDbo(CarteiraInvestimento ct)
     {
-        return new CarteiraInvestimentoDbo
+        return new CarteiraInvestimentoDBO
         {
             id_efetuacao = ct.id_efetuacao,
             id_cliente_carteira = ct.id_cliente_carteira,
