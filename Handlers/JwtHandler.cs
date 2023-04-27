@@ -8,7 +8,7 @@ public static class JwtHandler
 {
     public static JwtSecurityToken GenerateJWTToken(IConfiguration configuration_context, List<Claim> claims, string jwt_key_attribute = "JWTKey")
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(System.Environment.GetEnvironmentVariable("PRIORI_SECRET_JWT_KEY") ?? "amogusssussyl33t"));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(APIConfiguration.PRIORI_SECRET_JWT_KEY));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
