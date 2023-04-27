@@ -4,8 +4,8 @@ using PRIORI_SERVICES_API.Models;
 using PRIORI_SERVICES_API.Model;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace PRIORI_SERVICES_API.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class CarteiraInvestimentoController : ControllerBase
@@ -21,7 +21,7 @@ public class CarteiraInvestimentoController : ControllerBase
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
 
         if (carteira == null)
-            return NotFound();
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
         return Ok(carteira);
     }
@@ -52,7 +52,7 @@ public class CarteiraInvestimentoController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         return CreatedAtAction(nameof(GetByID), new { id = carteira.id_efetuacao }, carteira.toDbo(carteira));
@@ -68,10 +68,8 @@ public class CarteiraInvestimentoController : ControllerBase
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
         Cliente? cliente = await _context.tblClientes.FindAsync(clienteid);
 
-        // pega valor que eu pús, rentabilidade total /360, dias investidos, da tudo q investiu com a rentabilidad diaria
-
         if (carteira == null || cliente == null)
-            return BadRequest();
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
         carteira.status = "INATIVO";
         cliente.status = "INATIVO";
@@ -84,9 +82,9 @@ public class CarteiraInvestimentoController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok();
     }
 }

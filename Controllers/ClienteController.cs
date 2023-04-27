@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Models.Dbos;
+using PRIORI_SERVICES_API.Models;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Auth/[controller]")]
@@ -20,26 +21,36 @@ public class ClienteController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet(Name = "ClientLogin")]
+    [HttpGet(Name = "LoginCliente")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Cliente>> Login(string email, string senha)
     {
-        Cliente? CheckUserExists = await (from user in _context.tblClientes
-                                          where user.email == email
-                                          select user).SingleAsync();
+        Cliente? target_cliente;
 
-        if (CheckUserExists == null ||
-            CheckUserExists.email == null ||
-            CheckUserExists.status == "INATIVO" ||
-            !BCrypt.Net.BCrypt.Verify(senha, CheckUserExists.senhaHash))
+        try
         {
-            return BadRequest("Falha ao fazer login");
+            target_cliente = await (from user in _context.tblClientes
+                                    where user.email == email
+                                    select user).SingleAsync();
+        }
+        catch (Exception)
+        {
+            target_cliente = null;
+        }
+
+        if (target_cliente == null ||
+            target_cliente.email == null ||
+            target_cliente.status == "INATIVO" ||
+            !BCrypt.Net.BCrypt.Verify(senha, target_cliente.senhaHash))
+        {
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         var claims = new List<Claim> {
-            new Claim(ClaimTypes.Name, CheckUserExists.email!),
+            new Claim(ClaimTypes.Name, target_cliente.email!),
             new Claim(ClaimTypes.Role, "User"),
+            new Claim(ClaimTypes.Sid, target_cliente.id_cliente.ToString())
         };
 
         return Ok(new JwtSecurityTokenHandler().WriteToken(
@@ -47,22 +58,20 @@ public class ClienteController : ControllerBase
         ));
     }
 
-    [HttpPost(Name = "RegisterClient")]
+    [HttpPost(Name = "RegistrarCliente")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Cliente>> Registrar(ClienteDBO request, string senha)
     {
-        var UserExists = _context.tblClientes.Any(e => e.email == request.email);
+        var user_exists = _context.tblClientes.Any(e => e.email == request.email);
 
-        var DEFAULT_BAD_REQUEST = "Falha ao registrar usuário";
-
-        if (UserExists ||
+        if (user_exists ||
             request.email == null ||
             !senha!.Any(char.IsUpper) ||
             !senha!.Any(char.IsNumber) ||
             senha!.Length <= 8)
         {
-            return BadRequest(DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
@@ -89,7 +98,7 @@ public class ClienteController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("mogus");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         return CreatedAtAction(
@@ -102,35 +111,35 @@ public class ClienteController : ControllerBase
             novoCliente.toDBO(ref novoCliente));
     }
 
-    [HttpPut("{id}", Name = "AlterClientDetails"), Authorize(Roles = "Consultor")]
+    [HttpPut("{id}", Name = "AlterarCliente"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AlterClient(int id, ClienteDBO request, string? senha, int? pontuacao)
+    public async Task<IActionResult> Alterar(int id, ClienteDBO request, string? senha, int? pontuacao)
     {
-        Cliente? SelectedClient = await _context.tblClientes.FindAsync(id);
+        Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
 
-        if (SelectedClient == null)
-            return BadRequest();
+        if (selected_cliente == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        SelectedClient.cpf = request.cpf;
-        SelectedClient.email = request.email;
-        SelectedClient.endereco = request.endereco;
-        SelectedClient.id_consultor = request.id_consultor;
-        SelectedClient.id_tipoinvestidor = request.id_tipoinvestidor;
-        SelectedClient.nome = request.nome;
-        SelectedClient.telefone = request.telefone;
+        selected_cliente.cpf = request.cpf;
+        selected_cliente.email = request.email;
+        selected_cliente.endereco = request.endereco;
+        selected_cliente.id_consultor = request.id_consultor;
+        selected_cliente.id_tipoinvestidor = request.id_tipoinvestidor;
+        selected_cliente.nome = request.nome;
+        selected_cliente.telefone = request.telefone;
 
         if (senha != null)
         {
             var salt = BCrypt.Net.BCrypt.GenerateSalt();
-            SelectedClient.senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, salt);
-            SelectedClient.senhaSalt = salt;
+            selected_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, salt);
+            selected_cliente.senhaSalt = salt;
         }
 
         if (pontuacao != null)
         {
-            SelectedClient.pontuacao = pontuacao;
+            selected_cliente.pontuacao = pontuacao;
         }
 
         try
@@ -139,24 +148,24 @@ public class ClienteController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok(selected_cliente);
     }
 
-    [HttpDelete("{id}", Name = "DeactivateClient"), Authorize(Roles = "Consultor")]
+    [HttpDelete("{id}", Name = "DesativarCliente"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id)
     {
-        Cliente? SelectedCliente = await _context.tblClientes.FindAsync(id);
+        Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
 
-        if (SelectedCliente == null)
-            return NotFound();
+        if (selected_cliente == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        SelectedCliente.status = "INATIVO";
+        selected_cliente.status = "INATIVO";
 
         try
         {
@@ -164,9 +173,9 @@ public class ClienteController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok(selected_cliente);
     }
 }

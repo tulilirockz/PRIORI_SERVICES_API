@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Models.Dbos;
+using PRIORI_SERVICES_API.Models;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Auth/[controller]")]
@@ -14,6 +15,8 @@ public class ConsultorController : ControllerBase
 {
     private readonly PrioriDbContext _context;
     private readonly IConfiguration _configuration;
+
+
     public ConsultorController(PrioriDbContext context, IConfiguration configuration)
     {
         _context = context;
@@ -25,21 +28,32 @@ public class ConsultorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Consultor>> Login(string usuario, string senha)
     {
-        Consultor? SelectedConsultor = await (from consultor in _context.tblConsultores
-                                              where consultor.usuario == usuario
-                                              select consultor).SingleAsync();
 
-        if (SelectedConsultor == null ||
-            SelectedConsultor.usuario == null ||
-            SelectedConsultor.status == "INATIVO" ||
-            !BCrypt.Net.BCrypt.Verify(senha, SelectedConsultor.senhaHash))
+        Consultor? selected_consultor;
+
+        try
+        {
+            selected_consultor = await (from consultor in _context.tblConsultores
+                                        where consultor.usuario == usuario
+                                        select consultor).SingleAsync();
+        }
+        catch (Exception)
+        {
+            selected_consultor = null;
+        }
+
+        if (selected_consultor == null ||
+            selected_consultor.usuario == null ||
+            selected_consultor.status == "INATIVO" ||
+            !BCrypt.Net.BCrypt.Verify(senha, selected_consultor.senhaHash))
         {
             return BadRequest("Falha ao fazer login");
         }
 
         var claims = new List<Claim> {
-            new Claim(ClaimTypes.Name, SelectedConsultor.email!),
+            new Claim(ClaimTypes.Name, selected_consultor.email!),
             new Claim(ClaimTypes.Role, "Consultor"),
+            new Claim("userID", selected_consultor.usuario.ToString())
         };
 
         return Ok(new JwtSecurityTokenHandler().WriteToken(
@@ -55,8 +69,6 @@ public class ConsultorController : ControllerBase
 
         bool CheckUserExists = _context.tblConsultores.Any(e => e.usuario == request.usuario);
 
-        var DEFAULT_BAD_REQUEST = "Falha ao registrar usuário";
-
         if (CheckUserExists ||
             request.usuario == null ||
             !senha!.Any(char.IsUpper) ||
@@ -64,7 +76,7 @@ public class ConsultorController : ControllerBase
             !senha!.Any(char.IsNumber) ||
             senha!.Length <= 8)
         {
-            return BadRequest(DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
@@ -88,7 +100,7 @@ public class ConsultorController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest(DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         return CreatedAtAction(
@@ -106,14 +118,14 @@ public class ConsultorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> DeleteConsultor(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        Consultor? SelectedConsultor = await _context.tblConsultores.FindAsync(id);
+        Consultor? selected_consultor = await _context.tblConsultores.FindAsync(id);
 
-        if (SelectedConsultor == null)
+        if (selected_consultor == null)
             return NotFound();
 
-        SelectedConsultor.status = "INATIVO";
+        selected_consultor.status = "INATIVO";
 
         try
         {
@@ -121,10 +133,10 @@ public class ConsultorController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok(selected_consultor);
     }
 
 
@@ -132,22 +144,22 @@ public class ConsultorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AlterConsultor(int id, ConsultorDBO ConsultorDbo, string? senha)
+    public async Task<IActionResult> Alter(int id, ConsultorDBO ConsultorDbo, string? senha)
     {
-        Consultor? SelectedConsultor = await _context.tblConsultores.FindAsync(id);
+        Consultor? selected_consultor = await _context.tblConsultores.FindAsync(id);
 
-        if (SelectedConsultor == null)
-            return BadRequest();
+        if (selected_consultor == null)
+            return NotFound("Falha ao encontrar consultor");
 
-        SelectedConsultor.cpf = ConsultorDbo.cpf;
-        SelectedConsultor.email = ConsultorDbo.email;
-        SelectedConsultor.telefone = ConsultorDbo.telefone;
+        selected_consultor.cpf = ConsultorDbo.cpf;
+        selected_consultor.email = ConsultorDbo.email;
+        selected_consultor.telefone = ConsultorDbo.telefone;
 
         if (senha != null)
         {
             var salt = BCrypt.Net.BCrypt.GenerateSalt();
-            SelectedConsultor.senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, salt);
-            SelectedConsultor.senhaSalt = salt;
+            selected_consultor.senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, salt);
+            selected_consultor.senhaSalt = salt;
         }
 
         try
@@ -156,9 +168,9 @@ public class ConsultorController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok(selected_consultor);
     }
 }
