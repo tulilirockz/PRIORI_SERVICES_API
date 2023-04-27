@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PRIORI_SERVICES_API.Model;
-public abstract class Consumidor<T, B>
+public abstract class Consumidor<TConsumidor, TDbo>
 {
 
     [Column(TypeName = "varchar(11)")]
@@ -16,5 +16,5 @@ public abstract class Consumidor<T, B>
     public string? senhaSalt { get; set; }
     [Column(TypeName = "varchar(200)")]
     public string? senhaHash { get; set; }
-    public abstract T toDBO(ref B DBO);
+    public abstract TConsumidor toDBO(ref TDbo DBO);
 }
