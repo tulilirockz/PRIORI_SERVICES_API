@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Models.Dbos;
+using PRIORI_SERVICES_API.Models;
 
 namespace PRIORI_SERVICES_API.Controllers;
 
@@ -19,7 +20,7 @@ public class PostsController : ControllerBase
     [HttpGet(Name = "GetBlogPosts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<PostBlog>>> GetPosts()
+    public async Task<ActionResult<IEnumerable<PostBlog>>> GetAll()
     {
         return await _context.tblPostBlog.ToListAsync();
     }
@@ -27,21 +28,21 @@ public class PostsController : ControllerBase
     [HttpGet("{id}", Name = "GetBlogPostById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<PostBlog>>> GetPostsFromID(int id)
+    public async Task<ActionResult<IEnumerable<PostBlog>>> GetFromID(int id)
     {
-        PostBlog? SelectedBlogPost = await _context.tblPostBlog.FindAsync(id);
+        PostBlog? selected_blog_post = await _context.tblPostBlog.FindAsync(id);
 
-        if (SelectedBlogPost == null)
-            return NotFound();
+        if (selected_blog_post == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        return Ok(SelectedBlogPost);
+        return Ok(selected_blog_post);
     }
 
     [HttpPost(Name = "CreateBlogPost"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PostBlogDBO>> CreateBlogPost(PostBlogDBO dbo)
+    public async Task<ActionResult<PostBlogDBO>> Create(PostBlogDBO dbo)
     {
         var novoPost = new PostBlog
         {
@@ -59,11 +60,11 @@ public class PostsController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         return CreatedAtAction(
-            nameof(GetPosts),
+            nameof(GetAll),
             new
             {
                 id = novoPost.id_post
@@ -75,14 +76,14 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> DeleteBlogPost(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        PostBlog? SelectedBlogPost = await _context.tblPostBlog.FindAsync(id);
+        PostBlog? selected_post = await _context.tblPostBlog.FindAsync(id);
 
-        if (SelectedBlogPost == null)
-            return NotFound();
+        if (selected_post == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        _context.tblPostBlog.Remove(SelectedBlogPost);
+        _context.tblPostBlog.Remove(selected_post);
 
         try
         {
@@ -90,29 +91,29 @@ public class PostsController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok();
     }
 
     [HttpPut("{id}"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AlterBlogPost(int id, PostBlogDBO BlogPost)
+    public async Task<IActionResult> Alter(int id, PostBlogDBO BlogPost)
     {
-        PostBlog? SelectedBlogPost = await _context.tblPostBlog.FindAsync(id);
+        PostBlog? selected_blog_post = await _context.tblPostBlog.FindAsync(id);
 
-        if (SelectedBlogPost == null)
-            return BadRequest();
+        if (selected_blog_post == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        SelectedBlogPost.conteudo = BlogPost.conteudo;
-        SelectedBlogPost.data_criacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
-        SelectedBlogPost.descricao = BlogPost.descricao;
-        SelectedBlogPost.id_autor = BlogPost.id_autor;
-        SelectedBlogPost.id_categoria = BlogPost.id_categoria;
-        SelectedBlogPost.titulo = BlogPost.titulo;
+        selected_blog_post.conteudo = BlogPost.conteudo;
+        selected_blog_post.data_criacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+        selected_blog_post.descricao = BlogPost.descricao;
+        selected_blog_post.id_autor = BlogPost.id_autor;
+        selected_blog_post.id_categoria = BlogPost.id_categoria;
+        selected_blog_post.titulo = BlogPost.titulo;
 
         try
         {
@@ -120,9 +121,9 @@ public class PostsController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest();
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok(selected_blog_post);
     }
 }

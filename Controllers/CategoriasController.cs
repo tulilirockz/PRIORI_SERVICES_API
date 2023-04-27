@@ -15,33 +15,33 @@ public class CategoriasController : ControllerBase
         _context = context;
     }
 
-    [HttpGet(Name = "GetBlogCategorias")]
+
+    [HttpGet(Name = "GetCategorias")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<CategoriaBlog>>> GetCategorias()
+    public async Task<ActionResult<IEnumerable<CategoriaBlog>>> GetAll()
     {
         return await _context.tblCategoriaBlog.ToListAsync();
     }
 
-    [HttpGet("{id}", Name = "GetBlogCategoriasById")]
+    [HttpGet("{id}", Name = "GetCategoriaById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<CategoriaBlog>>> GetCategoriaFromID(int id)
+    public async Task<ActionResult<IEnumerable<CategoriaBlog>>> GetFromID(int id)
     {
-        CategoriaBlog? SelectedCategoria = await _context.tblCategoriaBlog.FindAsync(id);
+        CategoriaBlog? selected_categoria = await _context.tblCategoriaBlog.FindAsync(id);
 
-        if (SelectedCategoria == null)
-            return NotFound();
+        if (selected_categoria == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        return Ok(SelectedCategoria);
+        return Ok(selected_categoria);
     }
-
 
     [HttpPost(Name = "CreateCategoria"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<CategoriaBlog>> CreateBlogPost(CategoriaBlogDBO dbo)
+    public async Task<ActionResult<CategoriaBlog>> Create(CategoriaBlogDBO dbo)
     {
         var novaCategoria = new CategoriaBlog
         {
@@ -49,17 +49,18 @@ public class CategoriasController : ControllerBase
         };
 
         _context.tblCategoriaBlog.Add(novaCategoria);
+
         try
         {
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         return CreatedAtAction(
-            nameof(GetCategorias),
+            nameof(GetAll),
             new
             {
                 id_categoria = novaCategoria.id_categoria
@@ -71,14 +72,14 @@ public class CategoriasController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> DeleteCategoria(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        CategoriaBlog? SelectedCategoria = await _context.tblCategoriaBlog.FindAsync(id);
+        CategoriaBlog? selected_categoria = await _context.tblCategoriaBlog.FindAsync(id);
 
-        if (SelectedCategoria == null)
-            return NotFound();
+        if (selected_categoria == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        _context.tblCategoriaBlog.Remove(SelectedCategoria);
+        _context.tblCategoriaBlog.Remove(selected_categoria);
 
         try
         {
@@ -86,24 +87,24 @@ public class CategoriasController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok();
     }
 
     [HttpPut("{id}"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AlterCategoria(int id, CategoriaBlogDBO request)
+    public async Task<IActionResult> Alter(int id, CategoriaBlogDBO request)
     {
-        CategoriaBlog? SelectedCategoria = await _context.tblCategoriaBlog.FindAsync(id);
+        CategoriaBlog? selected_categoria = await _context.tblCategoriaBlog.FindAsync(id);
 
-        if (SelectedCategoria == null)
-            return BadRequest();
+        if (selected_categoria == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        SelectedCategoria.nome_categoria = request.nome_categoria;
+        selected_categoria.nome_categoria = request.nome_categoria;
 
         try
         {
@@ -111,9 +112,9 @@ public class CategoriasController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            return BadRequest();
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok(selected_categoria);
     }
 }
