@@ -1,16 +1,14 @@
-namespace PRIORI_SERVICES_API.Repository.Interface
+namespace PRIORI_SERVICES_API.Repository.Interface;
+
+public interface IRepositoryGenerico<TEntity> where TEntity : class
 {
-    public interface IRepositoryGenerico<TEntity> where TEntity : class
-    {
-        IQueryable<TEntity> FindAll();
+    IQueryable<TEntity> FindAll();
 
-        Task<TEntity> GetById(int id);
+    Task<TEntity> GetById(int id);
 
-        Task Create(TEntity entity);
+    Task Create(TEntity entity);
 
-        Task Update(TEntity entity);
+    Task Update(TEntity entity);
 
-        Task Delete(int id);
-
-    }
+    Task Delete(int id);
 }

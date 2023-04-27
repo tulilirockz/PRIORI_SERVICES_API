@@ -1,8 +1,8 @@
 using PRIORI_SERVICES_API.Models;
 
-namespace PRIORI_SERVICES_API.Repository.Interface
+namespace PRIORI_SERVICES_API.Repository.Interface;
+
+public interface IAtualizacaoRepository : IRepositoryGenerico<Atualizacao>
 {
-    public interface IAtualizacaoRepository : IRepositoryGenerico<Atualizacao>
-    {
-    }
 }
+
