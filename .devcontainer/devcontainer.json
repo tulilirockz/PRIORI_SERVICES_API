@@ -5,7 +5,6 @@
     "workspaceFolder": "/workspace",
     "runArgs": [
         "--userns=keep-id",
-        "--name=metabox",
         "--network=host"
     ],
     "mounts": [
@@ -18,10 +17,7 @@
                 "ms-dotnettools.csharp",
                 "EditorConfig.EditorConfig",
                 "ms-vsliveshare.vsliveshare",
-                "GitHub.vscode-pull-request-github",
-                "ms-mssql.mssql",
-                "rangav.vscode-thunder-client",
-                "dbaeumer.vscode-eslint"
+                "GitHub.vscode-pull-request-github"
             ]
         }
     },
