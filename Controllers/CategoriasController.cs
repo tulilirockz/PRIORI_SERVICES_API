@@ -79,10 +79,10 @@ public class CategoriasController : ControllerBase
         if (selected_categoria == null)
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        _context.tblCategoriaBlog.Remove(selected_categoria);
-
         try
         {
+
+            _context.tblCategoriaBlog.Remove(selected_categoria);
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)

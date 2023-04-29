@@ -63,21 +63,26 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Delete(int id, int clienteid)
+    public async Task<ActionResult> Delete(int id)
     {
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
-        Cliente? cliente = await _context.tblClientes.FindAsync(clienteid);
+        // TODO: ajeitar 
 
-        if (carteira == null || cliente == null)
+        if (carteira == null)
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+
+        Cliente? cliente = await _context.tblClientes.FindAsync(carteira.id_cliente_carteira);
+
+        if (cliente == null)
+        {
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+        }
 
         carteira.status = "INATIVO";
         cliente.status = "INATIVO";
 
         try
         {
-            _context.Update(carteira);
-            _context.Update(cliente);
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
