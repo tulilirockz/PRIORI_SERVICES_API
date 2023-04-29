@@ -29,14 +29,10 @@ public class CarteiraInvestimento
     [Column(TypeName = "int")]
     public int id_efetuacao { get; set; }
 
-    [JsonIgnore]
-    public Cliente? cliente { get; set; }
     [Column(TypeName = "int")]
     [ForeignKey("tblClientes")]
     public int id_cliente_carteira { get; set; }
 
-    [JsonIgnore]
-    public Investimento? investimento { get; set; }
     [Column(TypeName = "int")]
     [ForeignKey("tblInvestimentos")]
     public int id_investimento { get; set; }
