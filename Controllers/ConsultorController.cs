@@ -47,13 +47,13 @@ public class ConsultorController : ControllerBase
             selected_consultor.status == "INATIVO" ||
             !BCrypt.Net.BCrypt.Verify(senha, selected_consultor.senhaHash))
         {
-            return BadRequest("Falha ao fazer login");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         var claims = new List<Claim> {
             new Claim(ClaimTypes.Name, selected_consultor.email!),
             new Claim(ClaimTypes.Role, "Consultor"),
-            new Claim("userID", selected_consultor.usuario.ToString())
+            new Claim(ClaimTypes.Sid, selected_consultor.usuario.ToString())
         };
 
         return Ok(new JwtSecurityTokenHandler().WriteToken(
