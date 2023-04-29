@@ -66,7 +66,6 @@ public class CarteiraInvestimentoController : ControllerBase
     public async Task<ActionResult> Delete(int id)
     {
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
-        // TODO: ajeitar 
 
         if (carteira == null)
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
