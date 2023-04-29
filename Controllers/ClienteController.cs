@@ -21,17 +21,17 @@ public class ClienteController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet(Name = "LoginCliente")]
+    [HttpPost("login", Name = "LoginCliente")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> Login(string email, string senha)
+    public async Task<ActionResult<Cliente>> Login(ClienteLoginDBO request)
     {
         Cliente? target_cliente;
 
         try
         {
             target_cliente = await (from user in _context.tblClientes
-                                    where user.email == email
+                                    where user.email == request.email
                                     select user).SingleAsync();
         }
         catch (Exception)
@@ -42,14 +42,14 @@ public class ClienteController : ControllerBase
         if (target_cliente == null ||
             target_cliente.email == null ||
             target_cliente.status == "INATIVO" ||
-            !BCrypt.Net.BCrypt.Verify(senha, target_cliente.senhaHash))
+            !BCrypt.Net.BCrypt.Verify(request.senha, target_cliente.senhaHash))
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         var claims = new List<Claim> {
             new Claim(ClaimTypes.Name, target_cliente.email!),
-            new Claim(ClaimTypes.Role, "User"),
+            new Claim(ClaimTypes.Role, "Cliente"),
             new Claim(ClaimTypes.Sid, target_cliente.id_cliente.ToString())
         };
 
@@ -58,7 +58,7 @@ public class ClienteController : ControllerBase
         ));
     }
 
-    [HttpPost(Name = "RegistrarCliente")]
+    [HttpPost("registrar", Name = "RegistrarCliente")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Cliente>> Registrar(ClienteDBO request, string senha)
