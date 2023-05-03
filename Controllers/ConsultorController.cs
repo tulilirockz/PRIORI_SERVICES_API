@@ -23,7 +23,7 @@ public class ConsultorController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet(Name = "Login Consultor")]
+    [HttpPost("login", Name = "Login Consultor")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Consultor>> Login(string usuario, string senha)
@@ -61,7 +61,7 @@ public class ConsultorController : ControllerBase
         ));
     }
 
-    [HttpPost(Name = "RegistrarConsultor"), Authorize(Roles = "Consultor")]
+    [HttpPost("register", Name = "RegistrarConsultor"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Consultor>> Registrar(ConsultorDBO request, string senha)
@@ -98,7 +98,7 @@ public class ConsultorController : ControllerBase
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -131,7 +131,7 @@ public class ConsultorController : ControllerBase
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -166,7 +166,7 @@ public class ConsultorController : ControllerBase
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }

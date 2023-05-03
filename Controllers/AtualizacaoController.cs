@@ -53,8 +53,8 @@ public class AtualizacaoController : ControllerBase
     {
         var novaAtualizacao = new Atualizacao
         {
+            id_investimento = dbo.id_investimento,
             id_consultor = dbo.id_consultor,
-            data_atualizacao = dbo.data_atualizacao,
             rentVarAtual = dbo.rentVarAtual,
             rentVarAntiga = dbo.rentVarAntiga,
             rentFixaAntiga = dbo.rentFixaAntiga,
@@ -65,7 +65,7 @@ public class AtualizacaoController : ControllerBase
         {
             await _repository.Create(novaAtualizacao);
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -74,9 +74,10 @@ public class AtualizacaoController : ControllerBase
             nameof(GetAll),
             new
             {
-                id_atualizacao = novaAtualizacao.id_atualizacao
+                id_atualizacao = novaAtualizacao.id_atualizacao,
+                data_atualizacao = novaAtualizacao.data_atualizacao
             },
-            novaAtualizacao.toDbo(novaAtualizacao));
+            novaAtualizacao.toDbo());
     }
 
     [HttpDelete("{id}")]
@@ -94,7 +95,7 @@ public class AtualizacaoController : ControllerBase
         {
             await _repository.Delete(atualizacao.id_atualizacao);
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -132,7 +133,7 @@ public class AtualizacaoController : ControllerBase
         {
             await _repository.Update(atualizacao);
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
