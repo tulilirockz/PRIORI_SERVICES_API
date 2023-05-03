@@ -1,12 +1,15 @@
 using PRIORI_SERVICES_API.Models;
+using PRIORI_SERVICES_API.Repository.Interface;
 
-namespace PRIORI_SERVICES_API.Repository;
-public class AtualizacaoRepository : RepositoryGenerico<Atualizacao>
+namespace PRIORI_SERVICES_API.Repository
 {
-    private readonly PrioriDbContext _context;
-    public AtualizacaoRepository(PrioriDbContext prioriDbContext) : base(prioriDbContext)
+    public class AtualizacaoRepository : RepositoryGenerico<Atualizacao>, IAtualizacaoRepository
     {
-        _context = prioriDbContext;
+        private readonly PrioriDbContext _context;
+        public AtualizacaoRepository(PrioriDbContext prioriDbContext) : base(prioriDbContext)
+        {
+            _context = prioriDbContext;
+        }
     }
 }
 

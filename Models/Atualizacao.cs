@@ -9,26 +9,28 @@ namespace PRIORI_SERVICES_API.Models;
 [PrimaryKey(nameof(id_atualizacao))]
 public class Atualizacao
 {
-    public AtualizacaoDBO toDbo(Atualizacao at)
+    public AtualizacaoDBO toDbo()
     {
         return new AtualizacaoDBO
         {
-            id_consultor = at.id_consultor,
-            data_atualizacao = at.data_atualizacao,
-            rentFixaAntiga = at.rentFixaAntiga,
-            rentFixaAtual = at.rentFixaAtual,
-            rentVarAntiga = at.rentVarAntiga,
-            rentVarAtual = at.rentVarAtual
+            id_investimento = this.id_investimento,
+            id_consultor = this.id_consultor,
+            data_atualizacao = this.data_atualizacao,
+            rentFixaAntiga = this.rentFixaAntiga,
+            rentFixaAtual = this.rentFixaAtual,
+            rentVarAntiga = this.rentVarAntiga,
+            rentVarAtual = this.rentVarAtual
         };
     }
     [Column(TypeName = "int")]
     public int id_atualizacao { get; set; }
     [Column(TypeName = "int")]
-    [ForeignKey("Consultor")]
+    [ForeignKey("tblConsultores")]
     public int id_consultor { get; set; }
     [Column(TypeName = "datetime")]
     public DateTime? data_atualizacao { get; set; }
     [Column(TypeName = "int")]
+    [ForeignKey("tblInvestimentos")]
     public int id_investimento { get; set; }
     [Column(TypeName = "numeric(8,4)")]
     public Decimal rentFixaAntiga { get; set; }

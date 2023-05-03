@@ -30,7 +30,7 @@ builder.Services.AddDbContext<PrioriDbContext>(opt =>
 }
 );
 
-builder.Services.AddScoped<AtualizacaoRepository>();
+builder.Services.AddScoped<IAtualizacaoRepository, AtualizacaoRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
