@@ -54,7 +54,7 @@ public class CategoriasController : ControllerBase
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -85,7 +85,7 @@ public class CategoriasController : ControllerBase
             _context.tblCategoriaBlog.Remove(selected_categoria);
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -110,7 +110,7 @@ public class CategoriasController : ControllerBase
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
