@@ -1,7 +1,6 @@
-using PRIORI_SERVICES_API.Model;
 using System.Text.Json.Serialization;
 
-namespace PRIORI_SERVICES_API.Models;
+namespace PRIORI_SERVICES_API.Model;
 public class CarteiraInvestimentoDBO
 {
     public int id_efetuacao { get; set; }

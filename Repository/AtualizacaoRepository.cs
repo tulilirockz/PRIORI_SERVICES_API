@@ -1,4 +1,4 @@
-using PRIORI_SERVICES_API.Models;
+using PRIORI_SERVICES_API.Model;
 using PRIORI_SERVICES_API.Repository.Interface;
 
 namespace PRIORI_SERVICES_API.Repository

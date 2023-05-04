@@ -1,4 +1,4 @@
-using PRIORI_SERVICES_API.Models.Dbos;
+using PRIORI_SERVICES_API.Model.DBO;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;

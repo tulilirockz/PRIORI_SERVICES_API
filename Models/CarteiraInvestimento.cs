@@ -1,10 +1,7 @@
-using PRIORI_SERVICES_API.Model;
-using System.Text.Json.Serialization;
-namespace PRIORI_SERVICES_API.Models;
-using PRIORI_SERVICES_API.Models.Dbos;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+
+namespace PRIORI_SERVICES_API.Model;
 
 [Table("tblCarteiraInvestimentos")]
 [PrimaryKey(nameof(id_investimento))]

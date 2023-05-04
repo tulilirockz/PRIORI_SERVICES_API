@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
-using PRIORI_SERVICES_API.Models;
-using PRIORI_SERVICES_API.Models.Dbos;
+using PRIORI_SERVICES_API.Model.DBO;
 using PRIORI_SERVICES_API.Repository.Interface;
 using Microsoft.AspNetCore.Authorization;
 

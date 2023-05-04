@@ -1,9 +1,8 @@
-using PRIORI_SERVICES_API.Models.Dbos;
-using System.ComponentModel.DataAnnotations;
+using PRIORI_SERVICES_API.Model.DBO;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace PRIORI_SERVICES_API.Models;
+namespace PRIORI_SERVICES_API.Model;
 
 [Table("tblAtualizacao")]
 [PrimaryKey(nameof(id_atualizacao))]
