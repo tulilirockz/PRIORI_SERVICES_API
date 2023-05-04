@@ -5,8 +5,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
-using PRIORI_SERVICES_API.Models.Dbos;
-using PRIORI_SERVICES_API.Models;
+using PRIORI_SERVICES_API.Model.DBO;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Auth/[controller]")]
