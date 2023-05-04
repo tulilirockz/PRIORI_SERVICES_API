@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
-id_investimento
+
 public class PrioriDbContext : DbContext
 {
     public PrioriDbContext(DbContextOptions<PrioriDbContext> options) : base(options)

@@ -44,7 +44,7 @@ public class AtualizacaoController : ControllerBase
     }
 
 
-    [HttpPost(Name = "CreateAtualizacao")]
+    [HttpPost(Name = "CreateAtualizacao"), Authorize("Cliente")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,7 +79,7 @@ public class AtualizacaoController : ControllerBase
             novaAtualizacao.toDbo());
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}"), Authorize("Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -102,7 +102,7 @@ public class AtualizacaoController : ControllerBase
         return Ok(atualizacao);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}"), Authorize("Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
