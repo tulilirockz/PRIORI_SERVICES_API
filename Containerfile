@@ -1,27 +1,16 @@
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS base
-
-RUN apk upgrade --update && apk add icu-libs icu-data-full tzdata
-
-FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build-env
-
-RUN apk upgrade --update && apk add icu-libs icu-data-full tzdata
+FROM cgr.dev/chainguard/dotnet-sdk:latest AS builder
 
 WORKDIR /App
-
 COPY . .
 
-RUN dotnet restore
+RUN dotnet publish -r linux-x64 --self-contained true -c Release -o out
 
-RUN dotnet publish -c Release -o out
+FROM cgr.dev/chainguard/dotnet-runtime:latest AS final
 
-FROM base AS final
-
-EXPOSE 80
+EXPOSE 5000 
 
 WORKDIR /App
-
-COPY --from=build-env /App/out .
+COPY --from=builder /App/out .
 
 ENV DOTNET_EnableDiagnostics=0
-
 ENTRYPOINT ["dotnet", "PRIORI_SERVICES_API.dll"]
