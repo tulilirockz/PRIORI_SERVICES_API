@@ -25,7 +25,7 @@ public class ConsultorController : ControllerBase
     [HttpPost("login", Name = "Login Consultor")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Consultor>> Login(string usuario, string senha)
+    public async Task<ActionResult<Consultor>> Login(ConsultorRequestDBO request)
     {
 
         Consultor? selected_consultor;
@@ -33,7 +33,7 @@ public class ConsultorController : ControllerBase
         try
         {
             selected_consultor = await (from consultor in _context.tblConsultores
-                                        where consultor.usuario == usuario
+                                        where consultor.usuario == request.usuario
                                         select consultor).SingleAsync();
         }
         catch (Exception)
@@ -44,7 +44,7 @@ public class ConsultorController : ControllerBase
         if (selected_consultor == null ||
             selected_consultor.usuario == null ||
             selected_consultor.status == "INATIVO" ||
-            !BCrypt.Net.BCrypt.Verify(senha, selected_consultor.senhaHash))
+            !BCrypt.Net.BCrypt.Verify(request.senha, selected_consultor.senhaHash))
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -63,17 +63,17 @@ public class ConsultorController : ControllerBase
     [HttpPost("register", Name = "RegistrarConsultor"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Consultor>> Registrar(ConsultorDBO request, string senha)
+    public async Task<ActionResult<Consultor>> Registrar(ConsultorDBO request)
     {
 
         bool CheckUserExists = _context.tblConsultores.Any(e => e.usuario == request.usuario);
 
         if (CheckUserExists ||
             request.usuario == null ||
-            !senha!.Any(char.IsUpper) ||
-            !senha!.Any(char.IsSymbol) ||
-            !senha!.Any(char.IsNumber) ||
-            senha!.Length <= 8)
+            !request.senha!.Any(char.IsUpper) ||
+            !request.senha!.Any(char.IsSymbol) ||
+            !request.senha!.Any(char.IsNumber) ||
+            request.senha!.Length <= 8)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -83,7 +83,7 @@ public class ConsultorController : ControllerBase
         var novoConsultor = new Consultor
         {
             data_contratacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
-            senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, senhaSalt),
+            senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, senhaSalt),
             senhaSalt = senhaSalt,
             cpf = request.cpf,
             email = request.email,
@@ -110,7 +110,6 @@ public class ConsultorController : ControllerBase
                 data_criacao = novoConsultor.data_contratacao,
             },
             novoConsultor.toDBO(ref novoConsultor));
-
     }
 
     [HttpDelete("{id}"), Authorize(Roles = "Consultor")]
@@ -143,21 +142,21 @@ public class ConsultorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Alter(int id, ConsultorDBO ConsultorDbo, string? senha)
+    public async Task<IActionResult> Alter(int id, ConsultorDBO request)
     {
         Consultor? selected_consultor = await _context.tblConsultores.FindAsync(id);
 
         if (selected_consultor == null)
-            return NotFound("Falha ao encontrar consultor");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        selected_consultor.cpf = ConsultorDbo.cpf;
-        selected_consultor.email = ConsultorDbo.email;
-        selected_consultor.telefone = ConsultorDbo.telefone;
+        selected_consultor.cpf = request.cpf;
+        selected_consultor.email = request.email;
+        selected_consultor.telefone = request.telefone;
 
-        if (senha != null)
+        if (request.senha != null)
         {
             var salt = BCrypt.Net.BCrypt.GenerateSalt();
-            selected_consultor.senhaHash = BCrypt.Net.BCrypt.HashPassword(senha, salt);
+            selected_consultor.senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, salt);
             selected_consultor.senhaSalt = salt;
         }
 

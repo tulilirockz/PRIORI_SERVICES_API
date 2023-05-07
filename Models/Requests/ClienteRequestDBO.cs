@@ -1,8 +1,8 @@
 namespace PRIORI_SERVICES_API.Model.DBO;
 
-public class ConsultorDBO : ConsumidorDBO
+public class ClienteRequestDBO
 {
-    public string? usuario { get; set; }
+    public string? email { get; set; }
 
     public string? senha { get; set; }
 }
