@@ -34,7 +34,7 @@ Você também pode executar a task "dotnet watch" por meio do VSCode e configura
 ```sh
 docker build -t priori-api-image https://github.com/Priori-Services/API
 
-docker run --name priori-api -p 5000:5000 --network=host \
+docker run --name priori-api -p 8080:80 --network=host \
   -e PRIORI_DATABASE_PORT="algoaqui" \
   -e PRIORI_DATABASE_NAME="algoaqui" \
   -e PRIORI_DATABASE_USER="algoaqui" \
