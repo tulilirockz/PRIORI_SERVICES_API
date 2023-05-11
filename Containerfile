@@ -1,7 +1,3 @@
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS base
-
-RUN apk upgrade --update && apk add icu-libs icu-data-full tzdata
-
 FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build-env
 
 RUN apk upgrade --update && apk add icu-libs icu-data-full tzdata
@@ -10,13 +6,15 @@ WORKDIR /App
 
 COPY . .
 
-RUN dotnet restore
-
 RUN dotnet publish -c Release -o out
 
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS base
 
-EXPOSE 80
+RUN apk upgrade --update && apk add icu-libs icu-data-full tzdata
+
+ENV PORT 5000
+EXPOSE 5000
+ENV ASPNETCORE_URLS=http://+:5000
 
 WORKDIR /App
 
