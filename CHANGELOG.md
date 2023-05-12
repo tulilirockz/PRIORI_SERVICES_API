@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.2.0](https://github.com/Priori-Services/API/compare/v1.1.0...v1.2.0) (2023-05-12)
+
+
+### Features
+
+* adicionar handeling para todos os erros de BD ([685c60c](https://github.com/Priori-Services/API/commit/685c60c1bd78ce2511352d93a8c64999c899a3c7))
+* configuração da API dedicada em classe ([2283fec](https://github.com/Priori-Services/API/commit/2283fec8b1b503aff45a9d24696c13f8d3c758c3))
+* container mais leve utilizando chainguard images e fix ports no README ([7ac28e5](https://github.com/Priori-Services/API/commit/7ac28e5c4352713398b463d12da880b88e8c8b44))
+* retornar ID junto de JWT ao login ([1a156a6](https://github.com/Priori-Services/API/commit/1a156a68aaa2f51e7932823b09597fc8e0827947))
+* start.sh p/ setar variaveis de ambiente no linux ([271f8ab](https://github.com/Priori-Services/API/commit/271f8ab436481b7557ef84e422dd1141177dafa4))
+* usar senhas em autenticação e cadastro do sistema sem utilizar parâmetros ([15d2fcb](https://github.com/Priori-Services/API/commit/15d2fcb6f8c2d771c0fc5d40d6973b631bc3ed23))
+* **WIP:** melhorar tratamento de erros e robustês do código dos Controllers ([bc2180c](https://github.com/Priori-Services/API/commit/bc2180c3c618b7d93c7be1e2f3740f7935f4ddbb))
+
+
+### Bug Fixes
+
+* arquivos gerados automaticamente ([727007b](https://github.com/Priori-Services/API/commit/727007b723fb196a1ab40b525b0931794696c7f9))
+* arquivos gerados automaticamente ([264f215](https://github.com/Priori-Services/API/commit/264f215c290e4bcfa3fdea1a83c9ade93cd00975))
+* arquivos gerados automaticamentes ([56c7325](https://github.com/Priori-Services/API/commit/56c7325f59198d44c665d0ac289defa40f840358))
+* atualizacao controller não sendo executado ([e5ad65e](https://github.com/Priori-Services/API/commit/e5ad65e4cf742c2eb71a2d7e43eb26e9d5ed9b58))
+* checkar corretamente se usuário não existe antes de login ([eec6ddb](https://github.com/Priori-Services/API/commit/eec6ddbfbc979c5d0628df4613c14961af9f5312))
+* especificar PRIORI_DATABASE_USER na config ([01316a0](https://github.com/Priori-Services/API/commit/01316a0540a4b9de93597290fead7147ba188787))
+* implementar SID corretamente em consultor ([55dfe80](https://github.com/Priori-Services/API/commit/55dfe800302a1a6076dd7073ec8715a1d31c1f6b))
+* melhorar segurança com post request no ClienteController ([b5bb507](https://github.com/Priori-Services/API/commit/b5bb507556f74425f3c8a1d35a3713b105ee786b))
+* mover namespace PRIORI[...].Models para Model ([c3529e2](https://github.com/Priori-Services/API/commit/c3529e216f69c076722c0dc2035bf8e97f9c9f74))
+* permissões corretas para atualizações ([2152c1f](https://github.com/Priori-Services/API/commit/2152c1fc6f3bb64589e099da0b9c74cca14a1e9d))
+* permitir funcionalidade dos endpoints da Cateira Investimentos ([2dbdbc7](https://github.com/Priori-Services/API/commit/2dbdbc7e196808ea2beea17b9d07990c44e9406f))
+* remove visualstudio project files ([eda1408](https://github.com/Priori-Services/API/commit/eda140818467dba9f7dd437fd51b31233bb91a7f))
+* remover campos desnecessários em Model de Carteira ([4787d39](https://github.com/Priori-Services/API/commit/4787d39ff01bd06d938edd245b1cee76134fefd3))
+* silenciar erros de nulificação do DbContext ([07c3c41](https://github.com/Priori-Services/API/commit/07c3c4113611946e1fe1520954949dfe0ede59d6))
+* simplificação do container da API ([cf3ad6a](https://github.com/Priori-Services/API/commit/cf3ad6a46e2cd984c9e887b013191e86a41c4c03))
+* typo em declaração da tabela Clientes ([5a4f165](https://github.com/Priori-Services/API/commit/5a4f1653b7a76b2d2d2dd5d0e02b224c73fb34e6))
+* typo nas variáveis do programa ([b0eca86](https://github.com/Priori-Services/API/commit/b0eca86d28e52bfc152a3b72f32e57cd190819f2))
+* variavel PRIORIUSER não sendo corretamente transferida p execução ([104deb3](https://github.com/Priori-Services/API/commit/104deb35edaea11d49b302bbb1685f55fabc8c7c))
+* **wip,minor:** remove some requirements for registering an user ([82838d6](https://github.com/Priori-Services/API/commit/82838d6e480a89bbd745982393b310c8d4d5f40d))
+
+
+### Reverts
+
+* remover senha do DBO ([13c79ea](https://github.com/Priori-Services/API/commit/13c79ea87bd3faabf49bb85afc18be381c66807b))
+* senha especificada por meio de argumento em vez de DBO ([d1f6a75](https://github.com/Priori-Services/API/commit/d1f6a75363e5f5c4b2b243c536c369ce556ff1a9))
+
 ## [1.1.0](https://github.com/Priori-Services/API/compare/v1.0.0...v1.1.0) (2023-04-15)
 
 
