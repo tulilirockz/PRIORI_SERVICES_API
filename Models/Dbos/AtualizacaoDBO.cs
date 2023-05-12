@@ -1,7 +1,8 @@
-namespace PRIORI_SERVICES_API.Models.Dbos;
+namespace PRIORI_SERVICES_API.Model.DBO;
 
 public class AtualizacaoDBO
 {
+    public int id_investimento { get; set; }
     public int id_consultor { get; set; }
     public DateTime? data_atualizacao { get; set; }
     public Decimal rentFixaAntiga { get; set; }

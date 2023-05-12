@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PRIORI_SERVICES_API.Models;
 using PRIORI_SERVICES_API.Model;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace PRIORI_SERVICES_API.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class CarteiraInvestimentoController : ControllerBase
@@ -21,7 +20,7 @@ public class CarteiraInvestimentoController : ControllerBase
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
 
         if (carteira == null)
-            return NotFound();
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
         return Ok(carteira);
     }
@@ -50,9 +49,9 @@ public class CarteiraInvestimentoController : ControllerBase
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
         return CreatedAtAction(nameof(GetByID), new { id = carteira.id_efetuacao }, carteira.toDbo(carteira));
@@ -63,30 +62,32 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Delete(int id, int clienteid)
+    public async Task<ActionResult> Delete(int id)
     {
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
-        Cliente? cliente = await _context.tblClientes.FindAsync(clienteid);
 
-        // pega valor que eu pús, rentabilidade total /360, dias investidos, da tudo q investiu com a rentabilidad diaria
+        if (carteira == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
 
-        if (carteira == null || cliente == null)
-            return BadRequest();
+        Cliente? cliente = await _context.tblClientes.FindAsync(carteira.id_cliente_carteira);
+
+        if (cliente == null)
+        {
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+        }
 
         carteira.status = "INATIVO";
         cliente.status = "INATIVO";
 
         try
         {
-            _context.Update(carteira);
-            _context.Update(cliente);
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest("Falha ao registrar mudanças no banco de dados");
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return NoContent();
+        return Ok();
     }
 }

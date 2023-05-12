@@ -1,10 +1,7 @@
-using PRIORI_SERVICES_API.Model;
-using System.Text.Json.Serialization;
-namespace PRIORI_SERVICES_API.Models;
-using PRIORI_SERVICES_API.Models.Dbos;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+
+namespace PRIORI_SERVICES_API.Model;
 
 [Table("tblCarteiraInvestimentos")]
 [PrimaryKey(nameof(id_investimento))]
@@ -29,14 +26,10 @@ public class CarteiraInvestimento
     [Column(TypeName = "int")]
     public int id_efetuacao { get; set; }
 
-    [JsonIgnore]
-    public Cliente? cliente { get; set; }
     [Column(TypeName = "int")]
     [ForeignKey("tblClientes")]
     public int id_cliente_carteira { get; set; }
 
-    [JsonIgnore]
-    public Investimento? investimento { get; set; }
     [Column(TypeName = "int")]
     [ForeignKey("tblInvestimentos")]
     public int id_investimento { get; set; }

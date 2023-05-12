@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
-using PRIORI_SERVICES_API.Models;
 
 public class PrioriDbContext : DbContext
 {

@@ -1,87 +1,44 @@
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Repository.Interface;
 
-namespace PRIORI_SERVICES_API.Repository
+namespace PRIORI_SERVICES_API.Repository;
+
+public class RepositoryGenerico<TEntity> : IRepositoryGenerico<TEntity> where TEntity : class
 {
-    public class RepositoryGenerico<TEntity> : IRepositoryGenerico<TEntity> where TEntity : class
+    private readonly PrioriDbContext _contexto;
+
+    public RepositoryGenerico(PrioriDbContext prioriDbContext)
     {
-        private readonly PrioriDbContext _contexto;
+        _contexto = prioriDbContext;
+    }
 
-        public RepositoryGenerico(PrioriDbContext prioriDbContext)
-        {
-            _contexto = prioriDbContext;
-        }
+    public async Task Create(TEntity entity)
+    {
+        await _contexto.AddAsync(entity);
+        await _contexto.SaveChangesAsync();
+    }
 
-        public async Task Create(TEntity entity)
-        {
-            try
-            {
-                await _contexto.AddAsync(entity);
-                await _contexto.SaveChangesAsync();
+    public async Task Delete(int id)
+    {
+        var entity = await GetById(id);
+        _contexto.Set<TEntity>().Remove(entity!);
+        await _contexto.SaveChangesAsync();
+    }
 
-            }
-            catch (Exception ex)
-            {
+    public IQueryable<TEntity> FindAll()
+    {
+        return _contexto.Set<TEntity>();
+    }
 
-                throw ex;
-            }
-        }
+    public async Task<TEntity?> GetById(int id)
+    {
+        return await _contexto.Set<TEntity>().FindAsync(id);
+    }
 
-        public async Task Delete(int id)
-        {
-            try
-            {
-                var entity = await GetById(id);
-                _contexto.Set<TEntity>().Remove(entity);
-                await _contexto.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-        public IQueryable<TEntity> FindAll()
-        {
-            try
-            {
-                return _contexto.Set<TEntity>();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-        public async Task<TEntity?> GetById(int id)
-        {
-            try
-            {
-                return await _contexto.Set<TEntity>().FindAsync(id);
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-        public async Task Update(TEntity entity)
-        {
-            try
-            {
-                var registro = _contexto.Set<TEntity>().Update(entity);
-                registro.State = EntityState.Modified;
-                await _contexto.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
+    public async Task Update(TEntity entity)
+    {
+        var registro = _contexto.Set<TEntity>().Update(entity);
+        registro.State = EntityState.Modified;
+        await _contexto.SaveChangesAsync();
     }
 }
