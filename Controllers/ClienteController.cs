@@ -31,6 +31,7 @@ public class ClienteController : ControllerBase
         {
             target_cliente = await (from user in _context.tblClientes
                                     where user.email == request.email
+
                                     select user).SingleAsync();
         }
         catch (Exception)
@@ -52,133 +53,132 @@ public class ClienteController : ControllerBase
             new Claim(ClaimTypes.Sid, target_cliente.id_cliente.ToString())
         };
 
-        return Ok(
-            new JWTReturn
-            {
-                id = target_cliente.id_cliente,
-                jwt_key = new JwtSecurityTokenHandler().WriteToken(JwtHandler.GenerateJWTToken(_configuration, claims)).ToString()
-            }
-        );
+        Dictionary<string, string> response = new Dictionary<string, string> {
+            { "id", $"{target_cliente.id_cliente}" },
+            { "jwt_key", $"{new JwtSecurityTokenHandler().WriteToken(JwtHandler.GenerateJWTToken(_configuration, claims))}" }
+        };
+
+        return Ok(response);
     }
 
-[HttpPost("registrar", Name = "RegistrarCliente")]
-[ProducesResponseType(StatusCodes.Status201Created)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-public async Task<ActionResult<Cliente>> Registrar(ClienteDBO request)
-{
-    var user_exists = _context.tblClientes.Any(e => e.email == request.email);
-
-    if (user_exists ||
-        request.email == null ||
-        !request.senha!.Any(char.IsUpper) ||
-        !request.senha!.Any(char.IsNumber) ||
-        request.senha!.Length <= 8)
+    [HttpPost("registrar", Name = "RegistrarCliente")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Cliente>> Registrar(ClienteDBO request)
     {
-        return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
-    }
+        var user_exists = _context.tblClientes.Any(e => e.email == request.email);
 
-    string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
-
-    var novoCliente = new Cliente
-    {
-        data_adesao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
-        id_consultor = request.id_consultor,
-        id_tipoinvestidor = request.id_tipoinvestidor,
-        endereco = request.endereco,
-        senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, senhaSalt),
-        senhaSalt = senhaSalt,
-        cpf = request.cpf,
-        email = request.email,
-        nome = request.nome,
-        telefone = request.telefone,
-        status = "ATIVO"
-    };
-
-    _context.tblClientes.Add(novoCliente);
-    try
-    {
-        await _context.SaveChangesAsync();
-    }
-    catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
-    {
-        return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
-    }
-
-    return CreatedAtAction(
-        nameof(Registrar),
-        new
+        if (user_exists ||
+            request.email == null ||
+            !request.senha!.Any(char.IsUpper) ||
+            !request.senha!.Any(char.IsNumber) ||
+            request.senha!.Length <= 8)
         {
-            id = novoCliente.id_consultor,
-            data_criacao = novoCliente.data_adesao,
-        },
-        novoCliente.toDBO(ref novoCliente));
-}
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+        }
 
-[HttpPut("{id}", Name = "AlterarCliente"), Authorize(Roles = "Consultor")]
-[ProducesResponseType(StatusCodes.Status204NoContent)]
-[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-public async Task<IActionResult> Alterar(int id, ClienteDBO request, int? pontuacao)
-{
-    Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
+        string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
 
-    if (selected_cliente == null)
-        return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+        var novoCliente = new Cliente
+        {
+            data_adesao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+            id_consultor = request.id_consultor,
+            id_tipoinvestidor = request.id_tipoinvestidor,
+            endereco = request.endereco,
+            senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, senhaSalt),
+            senhaSalt = senhaSalt,
+            cpf = request.cpf,
+            email = request.email,
+            nome = request.nome,
+            telefone = request.telefone,
+            status = "ATIVO"
+        };
 
-    selected_cliente.cpf = request.cpf;
-    selected_cliente.email = request.email;
-    selected_cliente.endereco = request.endereco;
-    selected_cliente.id_consultor = request.id_consultor;
-    selected_cliente.id_tipoinvestidor = request.id_tipoinvestidor;
-    selected_cliente.nome = request.nome;
-    selected_cliente.telefone = request.telefone;
+        _context.tblClientes.Add(novoCliente);
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
+        {
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+        }
 
-    if (request.senha != null)
-    {
-        var salt = BCrypt.Net.BCrypt.GenerateSalt();
-        selected_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, salt);
-        selected_cliente.senhaSalt = salt;
+        return CreatedAtAction(
+            nameof(Registrar),
+            new
+            {
+                id = novoCliente.id_consultor,
+                data_criacao = novoCliente.data_adesao,
+            },
+            novoCliente.toDBO(ref novoCliente));
     }
 
-    if (pontuacao != null)
+    [HttpPut("{id}", Name = "AlterarCliente"), Authorize(Roles = "Consultor")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Alterar(int id, ClienteDBO request, int? pontuacao)
     {
-        selected_cliente.pontuacao = pontuacao;
+        Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
+
+        if (selected_cliente == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+
+        selected_cliente.cpf = request.cpf;
+        selected_cliente.email = request.email;
+        selected_cliente.endereco = request.endereco;
+        selected_cliente.id_consultor = request.id_consultor;
+        selected_cliente.id_tipoinvestidor = request.id_tipoinvestidor;
+        selected_cliente.nome = request.nome;
+        selected_cliente.telefone = request.telefone;
+
+        if (request.senha != null)
+        {
+            var salt = BCrypt.Net.BCrypt.GenerateSalt();
+            selected_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, salt);
+            selected_cliente.senhaSalt = salt;
+        }
+
+        if (pontuacao != null)
+        {
+            selected_cliente.pontuacao = pontuacao;
+        }
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
+        {
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+        }
+
+        return Ok(selected_cliente);
     }
 
-    try
+    [HttpDelete("{id}", Name = "DesativarCliente"), Authorize(Roles = "Consultor")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Delete(int id)
     {
-        await _context.SaveChangesAsync();
+        Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
+
+        if (selected_cliente == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+
+        selected_cliente.status = "INATIVO";
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
+        {
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+        }
+
+        return Ok(selected_cliente);
     }
-    catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
-    {
-        return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
-    }
-
-    return Ok(selected_cliente);
-}
-
-[HttpDelete("{id}", Name = "DesativarCliente"), Authorize(Roles = "Consultor")]
-[ProducesResponseType(StatusCodes.Status204NoContent)]
-[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-public async Task<IActionResult> Delete(int id)
-{
-    Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
-
-    if (selected_cliente == null)
-        return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
-
-    selected_cliente.status = "INATIVO";
-
-    try
-    {
-        await _context.SaveChangesAsync();
-    }
-    catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
-    {
-        return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
-    }
-
-    return Ok(selected_cliente);
-}
 }
