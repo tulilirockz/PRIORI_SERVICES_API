@@ -35,11 +35,35 @@ Você também pode executar a task "dotnet watch" por meio do VSCode e configura
 docker build -t priori-api-image https://github.com/Priori-Services/API
 
 docker run --name priori-api -p 8080:80 --network=host \
-  -e PRIORI_DATABASE_PORT="algoaqui" \
-  -e PRIORI_DATABASE_NAME="algoaqui" \
-  -e PRIORI_DATABASE_USER="algoaqui" \
-  -e PRIORI_DATABASE_IP="algoaqui" \
-  -e PRIORI_DATABASE_PASSWORD="algoaqui" \
-  -e PRIORI_SECRET_JWT_KEY="algoaqui" \
+  -e PRIORI_DATABASE_PORT="1433" \
+  -e PRIORI_DATABASE_NAME="Priori" \
+  -e PRIORI_DATABASE_USER="sa" \
+  -e PRIORI_DATABASE_IP="localhost" \
+  -e PRIORI_DATABASE_PASSWORD="_ScoobyDooby23" \
+  -e PRIORI_SECRET_JWT_KEY="SUPER_SECRET_JWT_KEYYYYY12312321" \
   priori-api-image
+```
+
+# Banco de Dados no Docker
+
+Para fazer o setup do banco de dados desse projeto usando Docker, deve-se seguir as seguintes instruções:
+
+## Criar o container
+
+```sh
+# "$PWD/data" tem de ser a pasta onde os arquivos SQL serão inseridos
+docker run --name "priori-db" \
+            -e "ACCEPT_EULA=Y" \
+            -e "MSSQL_SA_PASSWORD=_ScoobyDooby23" \
+            -p 1433:1433 \
+            -v $PWD/data:/data:Z \
+            -d \
+            mcr.microsoft.com/mssql/server:2022-latest
+```
+
+## Inserir o Banco de Dados no container
+
+```sh
+# /data deve ter os arquivos, execute eles por lá
+docker exec -it priori-db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P _ScoobyDooby23 -i /data/setup.sql
 ```
