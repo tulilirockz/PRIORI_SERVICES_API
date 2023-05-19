@@ -41,7 +41,7 @@ docker run --name priori-api -p 8080:80 --network=host \
   -e PRIORI_DATABASE_IP="localhost" \
   -e PRIORI_DATABASE_PASSWORD="_ScoobyDooby23" \
   -e PRIORI_SECRET_JWT_KEY="SUPER_SECRET_JWT_KEYYYYY12312321" \
-  --pull \
+  --pull=always \
   ghcr.io/priori-services/priori_api:latest
 ```
 
