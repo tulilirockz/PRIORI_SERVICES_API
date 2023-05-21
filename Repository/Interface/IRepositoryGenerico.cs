@@ -4,7 +4,7 @@ public interface IRepositoryGenerico<TEntity> where TEntity : class
 {
     IQueryable<TEntity> FindAll();
 
-    Task<TEntity> GetById(int id);
+    Task<TEntity?> GetById(int id);
 
     Task Create(TEntity entity);
 
