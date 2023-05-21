@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PRIORI_SERVICES_API.Model;
 
+public enum Status { ATIVO, INATIVO }
 public enum RespostaAssessoria { aceitou, recusou, cancelou }
 public enum SituacaoAssessoria { ativa, inativa }
 
@@ -30,7 +31,7 @@ public class Cliente
     public string? status { get; set; }
 
     [Column(TypeName = "date")]
-    public DateTime data_adesao { get; set; }
+    public DateOnly data_adesao { get; set; }
 
     [Column(TypeName = "numeric")]
     public float? pontuacao { get; set; }
@@ -38,13 +39,13 @@ public class Cliente
     [Column(TypeName = "int")]
     public RespostaAssessoria? respostaAssessoria { get; set; }
     [Column(TypeName = "int")]
-    public SituacaoAssessoria? situacaoAsessoria { get; set; }
+    public SituacaoAssessoria? situacaoAssessoria { get; set; }
 
     [Column(TypeName = "varchar(60)")]
     public string? endereco { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? dataNascimento { get; set; }
+    [Column(TypeName = "date")]
+    public DateOnly? dataNascimento { get; set; }
 
     [Column(TypeName = "varchar(25)")]
     public string? email { get; set; }
@@ -66,7 +67,10 @@ public class Cliente
             id_tipoinvestidor = this.id_tipoinvestidor,
             nome = this.nome,
             dataNascimento = this.dataNascimento,
-
+            senha = null,
+            status = this.status,
+            respostaAssessoria = this.respostaAssessoria,
+            situacaoAssessoria = this.situacaoAssessoria
         };
     }
 }

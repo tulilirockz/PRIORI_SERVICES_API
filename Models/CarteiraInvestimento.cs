@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace PRIORI_SERVICES_API.Model;
 
 [Table("tblCarteiraInvestimentos")]
-[PrimaryKey(nameof(id_investimento))]
+[PrimaryKey(nameof(id_efetuacao))]
 public class CarteiraInvestimento
 {
     [Column(TypeName = "int")]

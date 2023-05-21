@@ -32,7 +32,6 @@ public class ClienteController : ControllerBase
         {
             target_cliente = await (from user in _context.tblClientes
                                     where user.email == request.email
-
                                     select user).SingleAsync();
         }
         catch (Exception)
@@ -73,7 +72,8 @@ public class ClienteController : ControllerBase
             request.email == null ||
             !request.senha!.Any(char.IsUpper) ||
             !request.senha!.Any(char.IsNumber) ||
-            request.senha!.Length <= 8)
+            request.senha!.Length <= 8 ||
+            request.dataNascimento == null)
         {
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
@@ -82,7 +82,7 @@ public class ClienteController : ControllerBase
 
         var novoCliente = new Cliente
         {
-            data_adesao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+            data_adesao = DateOnly.FromDateTime(System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))),
             id_consultor = request.id_consultor,
             id_tipoinvestidor = request.id_tipoinvestidor,
             endereco = request.endereco,
@@ -91,13 +91,50 @@ public class ClienteController : ControllerBase
             cpf = request.cpf,
             email = request.email,
             nome = request.nome,
-            dataNascimento = request.dataNascimento,
+            dataNascimento = request.dataNascimento!.Value,
             pontuacao = 0,
             respostaAssessoria = RespostaAssessoria.recusou,
             status = "ATIVO"
         };
 
         _context.tblClientes.Add(novoCliente);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
+        {
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+        }
+
+        Cliente? cliente_criado = null;
+
+        try
+        {
+            cliente_criado = await (from user in _context.tblClientes
+                                    where user.email == request.email
+                                    select user).SingleAsync();
+        }
+        catch (Exception)
+        {
+            cliente_criado = null;
+        }
+
+        if (cliente_criado == null)
+            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+
+        var carteira_criada = new CarteiraInvestimento
+        {
+            saldo = 0,
+            valor_aplicado = 0,
+            status = "ATIVO",
+            id_investimento = 0,
+            id_cliente_carteira = cliente_criado.id_cliente
+        };
+
+        _context.tblCarteiraInvestimentos.Add(carteira_criada);
+
         try
         {
             await _context.SaveChangesAsync();
@@ -111,8 +148,8 @@ public class ClienteController : ControllerBase
             nameof(Registrar),
             new
             {
-                id = novoCliente.id_consultor,
-                data_criacao = novoCliente.data_adesao,
+                id = novoCliente.id_cliente,
+                data_adesao = novoCliente.data_adesao,
             },
             novoCliente.toDBO());
     }

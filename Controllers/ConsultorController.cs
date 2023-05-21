@@ -83,7 +83,7 @@ public class ConsultorController : ControllerBase
 
         var novoConsultor = new Consultor
         {
-            data_contratacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+            data_contratacao = DateOnly.FromDateTime(System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))),
             senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, senhaSalt),
             senhaSalt = senhaSalt,
             cpf = request.cpf,

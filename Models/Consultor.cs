@@ -17,7 +17,7 @@ public class Consultor
     public string nome { get; set; } = String.Empty;
 
     [Column(TypeName = "date")]
-    public DateTime dataNascimento { get; set; }
+    public DateOnly dataNascimento { get; set; }
 
     [Column(TypeName = "varchar(11)")]
     public string? cpf { get; set; }
@@ -29,10 +29,10 @@ public class Consultor
     public string? telefone { get; set; }
 
     [Column(TypeName = "date")]
-    public DateTime data_contratacao { get; set; }
+    public DateOnly data_contratacao { get; set; }
 
     [Column(TypeName = "date")]
-    public DateTime? data_demissao { get; set; }
+    public DateOnly? data_demissao { get; set; }
 
     [Column(TypeName = "varchar(8)")]
     public string? status { get; set; }
