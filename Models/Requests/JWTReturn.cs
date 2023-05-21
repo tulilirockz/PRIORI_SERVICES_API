@@ -1,4 +1,4 @@
-namespace PRIORI_SERVICES_API.Model;
+namespace PRIORI_SERVICES_API.Model.Request;
 
 public sealed class JWTReturn
 {

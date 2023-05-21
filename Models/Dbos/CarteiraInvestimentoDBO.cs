@@ -4,15 +4,8 @@ namespace PRIORI_SERVICES_API.Model;
 public class CarteiraInvestimentoDBO
 {
     public int id_efetuacao { get; set; }
-
-    [JsonIgnore]
-    public Cliente? cliente { get; set; }
     public int id_cliente_carteira { get; set; }
-
-    [JsonIgnore]
-    public Investimento? investimento { get; set; }
     public int id_investimento { get; set; }
-
     public Decimal rentabilidade_fixa { get; set; }
     public Decimal rentabilidade_variavel { get; set; }
     public DateTime data_efetuacao { get; set; }

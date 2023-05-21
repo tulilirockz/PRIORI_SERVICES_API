@@ -1,4 +1,4 @@
-namespace PRIORI_SERVICES_API.Model.DBO;
+namespace PRIORI_SERVICES_API.Model.Request;
 
 public class ConsultorRequestDBO
 {

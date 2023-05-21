@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Model.DBO;
+using PRIORI_SERVICES_API.Model.Request;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Auth/[controller]")]
@@ -109,7 +110,7 @@ public class ConsultorController : ControllerBase
                 id = novoConsultor.id_consultor,
                 data_criacao = novoConsultor.data_contratacao,
             },
-            novoConsultor.toDBO(ref novoConsultor));
+            novoConsultor.toDBO());
     }
 
     [HttpDelete("{id}"), Authorize(Roles = "Consultor")]

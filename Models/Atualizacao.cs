@@ -8,7 +8,32 @@ namespace PRIORI_SERVICES_API.Model;
 [PrimaryKey(nameof(id_atualizacao))]
 public class Atualizacao
 {
-    public AtualizacaoDBO toDbo()
+    [Column(TypeName = "int")]
+    public int id_atualizacao { get; set; }
+
+    [Column(TypeName = "int")]
+    [ForeignKey("tblConsultores")]
+    public int id_consultor { get; set; }
+
+    [Column(TypeName = "int"), ForeignKey("tblInvestimentos")]
+    public int id_investimento { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? data_atualizacao { get; set; }
+
+    [Column(TypeName = "numeric(8,4)")]
+    public Decimal rentFixaAntiga { get; set; }
+
+    [Column(TypeName = "numeric(8,2)")]
+    public Decimal rentVarAntiga { get; set; }
+
+    [Column(TypeName = "numeric(8,4)")]
+    public Decimal rentFixaAtual { get; set; }
+
+    [Column(TypeName = "numeric(8,2)")]
+    public Decimal rentVarAtual { get; set; }
+
+    public AtualizacaoDBO toDBO()
     {
         return new AtualizacaoDBO
         {
@@ -21,22 +46,4 @@ public class Atualizacao
             rentVarAtual = this.rentVarAtual
         };
     }
-    [Column(TypeName = "int")]
-    public int id_atualizacao { get; set; }
-    [Column(TypeName = "int")]
-    [ForeignKey("tblConsultores")]
-    public int id_consultor { get; set; }
-    [Column(TypeName = "datetime")]
-    public DateTime? data_atualizacao { get; set; }
-    [Column(TypeName = "int")]
-    [ForeignKey("tblInvestimentos")]
-    public int id_investimento { get; set; }
-    [Column(TypeName = "numeric(8,4)")]
-    public Decimal rentFixaAntiga { get; set; }
-    [Column(TypeName = "numeric(8,2)")]
-    public Decimal rentVarAntiga { get; set; }
-    [Column(TypeName = "numeric(8,4)")]
-    public Decimal rentFixaAtual { get; set; }
-    [Column(TypeName = "numeric(8,2)")]
-    public Decimal rentVarAtual { get; set; }
 }

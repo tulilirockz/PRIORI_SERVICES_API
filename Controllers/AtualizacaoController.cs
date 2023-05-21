@@ -76,7 +76,7 @@ public class AtualizacaoController : ControllerBase
                 id_atualizacao = novaAtualizacao.id_atualizacao,
                 data_atualizacao = novaAtualizacao.data_atualizacao
             },
-            novaAtualizacao.toDbo());
+            novaAtualizacao.toDBO());
     }
 
     [HttpDelete("{id}"), Authorize("Consultor")]

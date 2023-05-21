@@ -54,7 +54,7 @@ public class CarteiraInvestimentoController : ControllerBase
             return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
         }
 
-        return CreatedAtAction(nameof(GetByID), new { id = carteira.id_efetuacao }, carteira.toDbo(carteira));
+        return CreatedAtAction(nameof(GetByID), new { id = carteira.id_efetuacao }, carteira.toDBO());
     }
 
 

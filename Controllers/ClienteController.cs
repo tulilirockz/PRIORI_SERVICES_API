@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Model.DBO;
+using PRIORI_SERVICES_API.Model.Request;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Auth/[controller]")]
@@ -23,7 +24,7 @@ public class ClienteController : ControllerBase
     [HttpPost("login", Name = "LoginCliente")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> Login(ClienteLoginDBO request)
+    public async Task<ActionResult<Cliente>> Login(ClienteRequestDBO request)
     {
         Cliente? target_cliente;
 
@@ -90,7 +91,9 @@ public class ClienteController : ControllerBase
             cpf = request.cpf,
             email = request.email,
             nome = request.nome,
-            telefone = request.telefone,
+            dataNascimento = request.dataNascimento,
+            pontuacao = 0,
+            respostaAssessoria = RespostaAssessoria.recusou,
             status = "ATIVO"
         };
 
@@ -111,7 +114,7 @@ public class ClienteController : ControllerBase
                 id = novoCliente.id_consultor,
                 data_criacao = novoCliente.data_adesao,
             },
-            novoCliente.toDBO(ref novoCliente));
+            novoCliente.toDBO());
     }
 
     [HttpPut("{id}", Name = "AlterarCliente"), Authorize(Roles = "Consultor")]
@@ -131,7 +134,6 @@ public class ClienteController : ControllerBase
         selected_cliente.id_consultor = request.id_consultor;
         selected_cliente.id_tipoinvestidor = request.id_tipoinvestidor;
         selected_cliente.nome = request.nome;
-        selected_cliente.telefone = request.telefone;
 
         if (request.senha != null)
         {

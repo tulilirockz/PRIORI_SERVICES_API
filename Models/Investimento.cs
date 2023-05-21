@@ -8,22 +8,7 @@ namespace PRIORI_SERVICES_API.Model;
 [Table("tblInvestimentos")]
 public class Investimento
 {
-    public InvestimentoDBO toDbo(Investimento inv)
-    {
-        return new InvestimentoDBO
-        {
-            id_investimento = inv.id_investimento,
-            id_riscoInvestimento = inv.id_riscoInvestimento,
-            nome = inv.nome,
-            tipo_investimento = inv.tipo_investimento,
-            rentabilidade_fixa = inv.rentabilidade_fixa,
-            rentabilidade_variavel = inv.rentabilidade_variavel,
-            data_atualizacao = inv.data_atualizacao,
-            vencimento = inv.vencimento,
-            valor_minimo = inv.valor_minimo,
-            tempo_minimo = inv.tempo_minimo,
-        };
-    }
+
     [Column(TypeName = "int")]
     public int id_investimento { get; set; }
 
@@ -48,5 +33,21 @@ public class Investimento
     public Decimal valor_minimo { get; set; }
     [Column(TypeName = "numeric(3)")]
     public Decimal tempo_minimo { get; set; }
+    public InvestimentoDBO toDBO()
+    {
+        return new InvestimentoDBO
+        {
+            id_investimento = this.id_investimento,
+            id_riscoInvestimento = this.id_riscoInvestimento,
+            nome = this.nome,
+            tipo_investimento = this.tipo_investimento,
+            rentabilidade_fixa = this.rentabilidade_fixa,
+            rentabilidade_variavel = this.rentabilidade_variavel,
+            data_atualizacao = this.data_atualizacao,
+            vencimento = this.vencimento,
+            valor_minimo = this.valor_minimo,
+            tempo_minimo = this.tempo_minimo
+        };
+    }
 }
 
