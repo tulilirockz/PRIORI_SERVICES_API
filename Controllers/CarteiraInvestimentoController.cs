@@ -15,7 +15,7 @@ public class CarteiraInvestimentoController : ControllerBase
 
     [HttpGet("{id}", Name = "GetCarteiraById"), Authorize(Roles = "Consultor,Cliente")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<CarteiraInvestimento>>> GetByID(int id)
     {
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
@@ -24,6 +24,27 @@ public class CarteiraInvestimentoController : ControllerBase
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
         return Ok(carteira);
+    }
+
+    [HttpGet("ByUserID/{id}", Name = "GetCarteiraByUserID"), Authorize(Roles = "Consultor,Cliente")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<CarteiraInvestimento>>> GetByUserID(int id)
+    {
+        if (!await _context.tblClientes.AnyAsync(e => e.id_cliente == id))
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        try
+        {
+            return await (from carteiras_user
+                          in _context.tblCarteiraInvestimentos
+                          where carteiras_user.id_cliente_carteira == id
+                          select carteiras_user).ToListAsync();
+        }
+        catch (Exception e) when (e is ArgumentNullException || e is OperationCanceledException)
+        {
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
     }
 
     [HttpPost(Name = "CreateCarteira"), Authorize(Roles = "Consultor,Cliente")]
@@ -42,7 +63,8 @@ public class CarteiraInvestimentoController : ControllerBase
             data_efetuacao = dbo.data_efetuacao,
             data_encerramento = dbo.data_encerramento,
             saldo = dbo.saldo,
-            status = dbo.status
+            status = dbo.status,
+            valor_aplicado = dbo.valor_aplicado
         };
 
         _context.tblCarteiraInvestimentos.Add(carteira);
