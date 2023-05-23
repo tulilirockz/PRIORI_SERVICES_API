@@ -28,7 +28,7 @@ public class Investimento
     [Column(TypeName = "datetime")]
     public DateTime data_atualizacao { get; set; }
     [Column(TypeName = "date")]
-    public DateOnly vencimento { get; set; }
+    public DateTime vencimento { get; set; }
     [Column(TypeName = "numeric(8,2)")]
     public Decimal valor_minimo { get; set; }
     [Column(TypeName = "numeric(3)")]

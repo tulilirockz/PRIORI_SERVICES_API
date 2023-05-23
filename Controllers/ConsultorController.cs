@@ -7,6 +7,7 @@ using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Model.DBO;
 using PRIORI_SERVICES_API.Model.Request;
+using PRIORI_SERVICES_API.Shared;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Auth/[controller]")]
@@ -47,7 +48,7 @@ public class ConsultorController : ControllerBase
             selected_consultor.status == "INATIVO" ||
             !BCrypt.Net.BCrypt.Verify(request.senha, selected_consultor.senhaHash))
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         var claims = new List<Claim> {
@@ -76,14 +77,14 @@ public class ConsultorController : ControllerBase
             !request.senha!.Any(char.IsNumber) ||
             request.senha!.Length <= 8)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
 
         var novoConsultor = new Consultor
         {
-            data_contratacao = DateOnly.FromDateTime(System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))),
+            data_contratacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(EnvironmentVariables.DATABASE_LOCALE)),
             senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, senhaSalt),
             senhaSalt = senhaSalt,
             cpf = request.cpf,
@@ -100,7 +101,7 @@ public class ConsultorController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return CreatedAtAction(
@@ -132,7 +133,7 @@ public class ConsultorController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok(selected_consultor);
@@ -148,7 +149,7 @@ public class ConsultorController : ControllerBase
         Consultor? selected_consultor = await _context.tblConsultores.FindAsync(id);
 
         if (selected_consultor == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         selected_consultor.cpf = request.cpf;
         selected_consultor.email = request.email;
@@ -167,7 +168,7 @@ public class ConsultorController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok(selected_consultor);

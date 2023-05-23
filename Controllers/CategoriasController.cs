@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Model.DBO;
+using PRIORI_SERVICES_API.Shared;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Blog/[controller]")]
@@ -32,7 +33,7 @@ public class CategoriasController : ControllerBase
         CategoriaBlog? selected_categoria = await _context.tblCategoriaBlog.FindAsync(id);
 
         if (selected_categoria == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         return Ok(selected_categoria);
     }
@@ -56,7 +57,7 @@ public class CategoriasController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return CreatedAtAction(
@@ -77,7 +78,7 @@ public class CategoriasController : ControllerBase
         CategoriaBlog? selected_categoria = await _context.tblCategoriaBlog.FindAsync(id);
 
         if (selected_categoria == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         try
         {
@@ -87,7 +88,7 @@ public class CategoriasController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok();
@@ -102,7 +103,7 @@ public class CategoriasController : ControllerBase
         CategoriaBlog? selected_categoria = await _context.tblCategoriaBlog.FindAsync(id);
 
         if (selected_categoria == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         selected_categoria.nome_categoria = request.nome_categoria;
 
@@ -112,7 +113,7 @@ public class CategoriasController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok(selected_categoria);

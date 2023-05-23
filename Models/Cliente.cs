@@ -1,4 +1,5 @@
 using PRIORI_SERVICES_API.Model.DBO;
+using System.Data.SqlTypes;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +32,7 @@ public class Cliente
     public string? status { get; set; }
 
     [Column(TypeName = "date")]
-    public DateOnly data_adesao { get; set; }
+    public DateTime data_adesao { get; set; }
 
     [Column(TypeName = "numeric")]
     public float? pontuacao { get; set; }
@@ -44,8 +45,8 @@ public class Cliente
     [Column(TypeName = "varchar(60)")]
     public string? endereco { get; set; }
 
-    [Column(TypeName = "date")]
-    public DateOnly? dataNascimento { get; set; }
+    [Column(TypeName = "varchar(20)")]
+    public string dataNascimento { get; set; } = String.Empty;
 
     [Column(TypeName = "varchar(25)")]
     public string? email { get; set; }

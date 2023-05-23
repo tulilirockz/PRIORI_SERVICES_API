@@ -7,6 +7,7 @@ using PRIORI_SERVICES_API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Model.DBO;
 using PRIORI_SERVICES_API.Model.Request;
+using PRIORI_SERVICES_API.Shared;
 
 namespace PRIORI_SERVICES_API.Controllers;
 [Route("api/Auth/[controller]")]
@@ -44,7 +45,7 @@ public class ClienteController : ControllerBase
             target_cliente.status == "INATIVO" ||
             !BCrypt.Net.BCrypt.Verify(request.senha, target_cliente.senhaHash))
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         var claims = new List<Claim> {
@@ -66,23 +67,23 @@ public class ClienteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Cliente>> Registrar(ClienteDBO request)
     {
+
         var user_exists = _context.tblClientes.Any(e => e.email == request.email);
 
         if (user_exists ||
             request.email == null ||
             !request.senha!.Any(char.IsUpper) ||
             !request.senha!.Any(char.IsNumber) ||
-            request.senha!.Length <= 8 ||
-            request.dataNascimento == null)
+            request.senha!.Length <= 8)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         string senhaSalt = BCrypt.Net.BCrypt.GenerateSalt();
 
-        var novoCliente = new Cliente
+        Cliente novoCliente = new Cliente
         {
-            data_adesao = DateOnly.FromDateTime(System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))),
+            data_adesao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(EnvironmentVariables.DATABASE_LOCALE)),
             id_consultor = request.id_consultor,
             id_tipoinvestidor = request.id_tipoinvestidor,
             endereco = request.endereco,
@@ -91,11 +92,12 @@ public class ClienteController : ControllerBase
             cpf = request.cpf,
             email = request.email,
             nome = request.nome,
-            dataNascimento = request.dataNascimento!.Value,
+            dataNascimento = request.dataNascimento,
             pontuacao = 0,
             respostaAssessoria = RespostaAssessoria.recusou,
             status = "ATIVO"
         };
+
 
         _context.tblClientes.Add(novoCliente);
 
@@ -105,9 +107,10 @@ public class ClienteController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
+        // Criar a carteira linkada com o cliente
         Cliente? cliente_criado = null;
 
         try
@@ -122,14 +125,14 @@ public class ClienteController : ControllerBase
         }
 
         if (cliente_criado == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         var carteira_criada = new CarteiraInvestimento
         {
             saldo = 0,
             valor_aplicado = 0,
             status = "ATIVO",
-            id_investimento = 0,
+            id_investimento = null,
             id_cliente_carteira = cliente_criado.id_cliente
         };
 
@@ -141,7 +144,7 @@ public class ClienteController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return CreatedAtAction(
@@ -163,7 +166,7 @@ public class ClienteController : ControllerBase
         Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
 
         if (selected_cliente == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         selected_cliente.cpf = request.cpf;
         selected_cliente.email = request.email;
@@ -190,7 +193,7 @@ public class ClienteController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok(selected_cliente);
@@ -205,7 +208,7 @@ public class ClienteController : ControllerBase
         Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
 
         if (selected_cliente == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         selected_cliente.status = "INATIVO";
 
@@ -215,7 +218,7 @@ public class ClienteController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok(selected_cliente);

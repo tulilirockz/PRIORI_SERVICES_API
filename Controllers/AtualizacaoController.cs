@@ -4,6 +4,7 @@ using PRIORI_SERVICES_API.Model;
 using PRIORI_SERVICES_API.Model.DBO;
 using PRIORI_SERVICES_API.Repository.Interface;
 using Microsoft.AspNetCore.Authorization;
+using PRIORI_SERVICES_API.Shared;
 
 namespace PRIORI_SERVICES_API.Controllers;
 
@@ -38,7 +39,7 @@ public class AtualizacaoController : ControllerBase
         Atualizacao? selected_atualizacao = await _repository.GetById(id);
 
         if (selected_atualizacao == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         return Ok(selected_atualizacao);
     }
@@ -66,7 +67,7 @@ public class AtualizacaoController : ControllerBase
         }
         catch (Exception)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return CreatedAtAction(
@@ -88,7 +89,7 @@ public class AtualizacaoController : ControllerBase
         Atualizacao? atualizacao = await _repository.GetById(id);
 
         if (atualizacao == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         try
         {
@@ -96,7 +97,7 @@ public class AtualizacaoController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok(atualizacao);
@@ -116,11 +117,11 @@ public class AtualizacaoController : ControllerBase
         }
         catch (InvalidOperationException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         if (atualizacao == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         atualizacao.data_atualizacao = request.data_atualizacao;
         atualizacao.rentFixaAntiga = request.rentFixaAntiga;
@@ -134,7 +135,7 @@ public class AtualizacaoController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok(atualizacao);

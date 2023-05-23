@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
 using Microsoft.AspNetCore.Authorization;
 using PRIORI_SERVICES_API.Model.DBO;
+using PRIORI_SERVICES_API.Shared;
 
 namespace PRIORI_SERVICES_API.Controllers;
 
@@ -32,7 +33,7 @@ public class PostsController : ControllerBase
         PostBlog? selected_blog_post = await _context.tblPostBlog.FindAsync(id);
 
         if (selected_blog_post == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         return Ok(selected_blog_post);
     }
@@ -59,7 +60,7 @@ public class PostsController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return CreatedAtAction(
@@ -80,7 +81,7 @@ public class PostsController : ControllerBase
         PostBlog? selected_post = await _context.tblPostBlog.FindAsync(id);
 
         if (selected_post == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         _context.tblPostBlog.Remove(selected_post);
 
@@ -90,7 +91,7 @@ public class PostsController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok();
@@ -105,7 +106,7 @@ public class PostsController : ControllerBase
         PostBlog? selected_blog_post = await _context.tblPostBlog.FindAsync(id);
 
         if (selected_blog_post == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         selected_blog_post.conteudo = BlogPost.conteudo;
         selected_blog_post.data_criacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
@@ -120,7 +121,7 @@ public class PostsController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok(selected_blog_post);

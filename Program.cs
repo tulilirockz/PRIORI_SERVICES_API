@@ -6,6 +6,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json.Serialization;
 using PRIORI_SERVICES_API.Repository.Interface;
 using PRIORI_SERVICES_API.Repository;
+using PRIORI_SERVICES_API.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<PrioriDbContext>(opt =>
 {
-    foreach (var item in typeof(APIConfiguration).GetFields())
+    foreach (var item in typeof(EnvironmentVariables).GetFields())
     {
         if (item.GetValue(null) == null)
         {
@@ -26,7 +27,7 @@ builder.Services.AddDbContext<PrioriDbContext>(opt =>
         }
     }
 
-    opt.UseSqlServer($"Server={APIConfiguration.PRIORI_DATABASE_IP},{APIConfiguration.PRIORI_DATABASE_PORT};DataBase={APIConfiguration.PRIORI_DATABASE_NAME};user id={APIConfiguration.PRIORI_DATABASE_USER};password={APIConfiguration.PRIORI_DATABASE_PASSWORD};Encrypt=True;TrustServerCertificate=True");
+    opt.UseSqlServer($"Server={EnvironmentVariables.PRIORI_DATABASE_IP},{EnvironmentVariables.PRIORI_DATABASE_PORT};DataBase={EnvironmentVariables.PRIORI_DATABASE_NAME};user id={EnvironmentVariables.PRIORI_DATABASE_USER};password={EnvironmentVariables.PRIORI_DATABASE_PASSWORD};Encrypt=True;TrustServerCertificate=True");
 }
 );
 
@@ -52,7 +53,7 @@ builder.Services.AddAuthentication().AddJwtBearer(opt =>
         ValidateIssuerSigningKey = true,
         ValidateAudience = false,
         ValidateIssuer = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(APIConfiguration.PRIORI_SECRET_JWT_KEY))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EnvironmentVariables.PRIORI_SECRET_JWT_KEY))
     };
 });
 

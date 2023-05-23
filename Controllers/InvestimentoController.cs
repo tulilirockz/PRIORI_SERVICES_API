@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
+using PRIORI_SERVICES_API.Shared;
 
 namespace PRIORI_SERVICES_API.Controllers;
 
@@ -31,7 +32,7 @@ public class InvestimentoController : ControllerBase
         Investimento? investimento = await _context.tblInvestimentos.FindAsync(id);
 
         if (investimento == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         return Ok(investimento);
     }

@@ -14,18 +14,18 @@ public class CarteiraInvestimento
     public int id_cliente_carteira { get; set; }
 
     [Column(TypeName = "int"), ForeignKey("tblInvestimentos")]
-    public int id_investimento { get; set; }
+    public int? id_investimento { get; set; }
 
     [Column(TypeName = "numeric(8,4)"), ForeignKey("tblInvestimentos")]
     public Decimal rentabilidade_fixa { get; set; }
     [Column(TypeName = "numeric(8,2)")]
     public Decimal rentabilidade_variavel { get; set; }
     [Column(TypeName = "datetime")]
-    public DateTime data_efetuacao { get; set; }
+    public DateTime data_efetuacao { get; set; } = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
     [Column(TypeName = "numeric(8,2)")]
     public Decimal valor_aplicado { get; set; }
     [Column(TypeName = "datetime")]
-    public DateTime? data_encerramento { get; set; }
+    public DateTime? data_encerramento { get; set; } = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
     [Column(TypeName = "varchar(8)")]
     public string? status { get; set; }
     [Column(TypeName = "numeric(8,2)")]

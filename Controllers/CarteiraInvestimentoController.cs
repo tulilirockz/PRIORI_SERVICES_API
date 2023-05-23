@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PRIORI_SERVICES_API.Model;
+using PRIORI_SERVICES_API.Shared;
 using Microsoft.AspNetCore.Authorization;
 
 namespace PRIORI_SERVICES_API.Controllers;
@@ -20,7 +21,7 @@ public class CarteiraInvestimentoController : ControllerBase
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
 
         if (carteira == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         return Ok(carteira);
     }
@@ -51,7 +52,7 @@ public class CarteiraInvestimentoController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return CreatedAtAction(nameof(GetByID), new { id = carteira.id_efetuacao }, carteira.toDBO());
@@ -67,13 +68,13 @@ public class CarteiraInvestimentoController : ControllerBase
         CarteiraInvestimento? carteira = await _context.tblCarteiraInvestimentos.FindAsync(id);
 
         if (carteira == null)
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
 
         Cliente? cliente = await _context.tblClientes.FindAsync(carteira.id_cliente_carteira);
 
         if (cliente == null)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         carteira.status = "INATIVO";
@@ -85,7 +86,7 @@ public class CarteiraInvestimentoController : ControllerBase
         }
         catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
         {
-            return BadRequest(DefaultRequest.DEFAULT_BAD_REQUEST);
+            return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
         return Ok();
