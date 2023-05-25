@@ -62,6 +62,31 @@ public class ClienteController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("/info/{id}", Name = "InfoCliente")]
+    [ProducesResponseType(StatusCodes.Status200Ok)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Cliente>> InfoCliente(int id)
+    {
+        Cliente? target_cliente;
+
+        try
+        {
+            target_cliente = await (from user in _context.tblClientes
+                                    where user.email == request.email
+                                    select user).SingleAsync();
+        }
+        catch (Exception)
+        {
+            target_cliente = null;
+        }
+
+        if (target_cliente == null)
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        return Ok(target_cliente);
+    }
+
+
     [HttpPost("registrar", Name = "RegistrarCliente")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
