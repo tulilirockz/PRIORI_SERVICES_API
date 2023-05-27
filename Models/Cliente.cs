@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace PRIORI_SERVICES_API.Model;
 
 public enum Status { ATIVO, INATIVO }
-public enum RespostaAssessoria { aceitou, recusou, cancelou }
+public enum RespostaAssessoria { mogus, aceitou, recusou, cancelou }
 public enum SituacaoAssessoria { ativa, inativa }
 
 [PrimaryKey(nameof(id_cliente))]
