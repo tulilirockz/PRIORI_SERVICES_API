@@ -62,7 +62,7 @@ public class ClienteController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("/info/{id}", Name = "InfoCliente")]
+    [HttpGet("info/{id}", Name = "InfoCliente")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Cliente>> InfoCliente(int id)
