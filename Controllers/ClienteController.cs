@@ -63,7 +63,7 @@ public class ClienteController : ControllerBase
     }
 
     [HttpGet("/info/{id}", Name = "InfoCliente")]
-    [ProducesResponseType(StatusCodes.Status200Ok)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Cliente>> InfoCliente(int id)
     {
@@ -71,9 +71,7 @@ public class ClienteController : ControllerBase
 
         try
         {
-            target_cliente = await (from user in _context.tblClientes
-                                    where user.email == request.email
-                                    select user).SingleAsync();
+            target_cliente = await _context.tblClientes.FindAsync(id);
         }
         catch (Exception)
         {
