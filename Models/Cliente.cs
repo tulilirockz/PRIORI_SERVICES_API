@@ -7,7 +7,7 @@ namespace PRIORI_SERVICES_API.Model;
 
 public enum Status { ATIVO, INATIVO }
 public enum RespostaAssessoria { mogus, aceitou, recusou, cancelou }
-public enum SituacaoAssessoria { ativa, inativa }
+public enum SituacaoAssessoria { mogus, ativa, inativa }
 
 [PrimaryKey(nameof(id_cliente))]
 [Table("tblClientes")]
