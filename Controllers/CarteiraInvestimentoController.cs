@@ -113,4 +113,30 @@ public class CarteiraInvestimentoController : ControllerBase
 
         return Ok();
     }
+    [HttpGet("saldo/{id}", Name = "SaldoCliente"), Authorize(Roles = "Cliente,Consultor")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<decimal>> SaldoUsuario(int id) {
+
+        DateTime? carteiramax_data = await (
+            from carteiras_user 
+            in _context.tblCarteiraInvestimentos
+            where carteiras_user.id_cliente_carteira == id
+            select carteiras_user.data_efetuacao).MaxAsync();
+
+        if (carteiramax_data == null)
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        decimal? saldo_mais_recente = await (
+            from carteiras_user 
+            in _context.tblCarteiraInvestimentos 
+            where carteiras_user.data_efetuacao == carteiramax_data && carteiras_user.id_cliente_carteira == id
+            select carteiras_user.saldo).SingleAsync();
+
+        if (saldo_mais_recente == null)
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        return Ok(saldo_mais_recente);
+    }
 }
