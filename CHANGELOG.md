@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.3.0](https://github.com/Priori-Services/API/compare/v1.2.0...v1.3.0) (2023-05-30)
+
+
+### Features
+
+* adicionar endpoint p/ todas as carteiras de investimento de X usuário ([6765d9b](https://github.com/Priori-Services/API/commit/6765d9be8ed5f9c8c2602ab808a89099feda2952))
+* building e publishing de container no gh-actions ([f535968](https://github.com/Priori-Services/API/commit/f5359685d3aa81f1cd6a632542064175ff9d2500))
+* criar carteira junto com o usuário com cadastro ([babb03a](https://github.com/Priori-Services/API/commit/babb03a5b263920a0bf3aa77ae215e002b5b4163))
+* criar endpoint de saldo de usuário na CarteiraInvestimento ([897b8fe](https://github.com/Priori-Services/API/commit/897b8fe19f23781aa6fd92aa4f012272ad9281f7))
+* endpoint p/ informações do cliente ([355a533](https://github.com/Priori-Services/API/commit/355a533bcc59c1ae9da9b47f5d9cd762c4abb477))
+
+
+### Bug Fixes
+
+* ajeitar endpoint de informações de cliente ([a18496a](https://github.com/Priori-Services/API/commit/a18496a397765aeb317dfdc53cf9478ae56b19ce))
+* ajeitar numeração da situação assessoria do cliente ([cfe85a3](https://github.com/Priori-Services/API/commit/cfe85a31c92b3f32841656a66886e26b5dce865e))
+* colocar o branch correto no GH actions ([e89a074](https://github.com/Priori-Services/API/commit/e89a074edb17f6d6588506c9ac7ef9a81493b458))
+* endpoint de info de cliente não requisitando as informaçẽos corretas ([efec152](https://github.com/Priori-Services/API/commit/efec152e7f262c54b2e5f1d5272c73c1c208d66a))
+* modificar modelos para nova versão do banco de dados ([e5709d7](https://github.com/Priori-Services/API/commit/e5709d78f421fe38496e3d11b777aaeefa615c25))
+* numeração da Reposta Assessoria ([2824e45](https://github.com/Priori-Services/API/commit/2824e455b58d7384cfdf7ea8c9da8e16585132b8))
+* problemas de nullificação na interface de repositório ([80b1bdc](https://github.com/Priori-Services/API/commit/80b1bdc47e52e4f6849b415599884114110fb61a))
+* returns corretos do clientecontroller ([ad958ea](https://github.com/Priori-Services/API/commit/ad958ead2f7b0fd8b6e138fd1a2368d3ff983f54))
+* roles não especificado em atualizacaocontroller ([e53be40](https://github.com/Priori-Services/API/commit/e53be40358d9e9ab15174e9585d12b7869c83a51))
+
 ## [1.2.0](https://github.com/Priori-Services/API/compare/v1.1.0...v1.2.0) (2023-05-12)
 
 
