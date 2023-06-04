@@ -180,7 +180,7 @@ public class ClienteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> ResetSenha(int id, string senha_nova)
+    public async Task<ActionResult<Cliente>> ResetSenha(int id, PasswordReset request)
     {
         Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
 
@@ -188,7 +188,7 @@ public class ClienteController : ControllerBase
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
         var salt = BCrypt.Net.BCrypt.GenerateSalt();
-        selected_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(senha_nova, salt);
+        selected_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, salt);
         selected_cliente.senhaSalt = salt;
 
         try
