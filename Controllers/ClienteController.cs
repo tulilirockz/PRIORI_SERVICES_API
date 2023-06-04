@@ -133,43 +133,6 @@ public class ClienteController : ControllerBase
             return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
-        // Criar a carteira linkada com o cliente
-        Cliente? cliente_criado = null;
-
-        try
-        {
-            cliente_criado = await (from user in _context.tblClientes
-                                    where user.email == request.email
-                                    select user).SingleAsync();
-        }
-        catch (Exception)
-        {
-            cliente_criado = null;
-        }
-
-        if (cliente_criado == null)
-            return BadRequest(DefaultRequests.BAD_REQUEST);
-
-        var carteira_criada = new CarteiraInvestimento
-        {
-            saldo = 0,
-            valor_aplicado = 0,
-            status = "ATIVO",
-            id_investimento = null,
-            id_cliente_carteira = cliente_criado.id_cliente
-        };
-
-        _context.tblCarteiraInvestimentos.Add(carteira_criada);
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
-        {
-            return BadRequest(DefaultRequests.BAD_REQUEST);
-        }
-
         return CreatedAtAction(
             nameof(Registrar),
             new
@@ -184,30 +147,21 @@ public class ClienteController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Alterar(int id, ClienteDBO request, int? pontuacao)
+    public async Task<ActionResult<Cliente>> Alterar(int id, ClienteAlterar request)
     {
         Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
 
         if (selected_cliente == null)
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
-        selected_cliente.cpf = request.cpf;
         selected_cliente.email = request.email;
         selected_cliente.endereco = request.endereco;
-        selected_cliente.id_consultor = request.id_consultor;
-        selected_cliente.id_tipoinvestidor = request.id_tipoinvestidor;
-        selected_cliente.nome = request.nome;
 
         if (request.senha != null)
         {
             var salt = BCrypt.Net.BCrypt.GenerateSalt();
             selected_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, salt);
             selected_cliente.senhaSalt = salt;
-        }
-
-        if (pontuacao != null)
-        {
-            selected_cliente.pontuacao = pontuacao;
         }
 
         try
@@ -221,6 +175,34 @@ public class ClienteController : ControllerBase
 
         return Ok(selected_cliente);
     }
+
+    [HttpPut("senha/{id}", Name = "ResetSenha"), Authorize(Roles = "Cliente,Consultor")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Cliente>> ResetSenha(int id, string senha_nova)
+    {
+        Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
+
+        if (selected_cliente == null)
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        var salt = BCrypt.Net.BCrypt.GenerateSalt();
+        selected_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(senha_nova, salt);
+        selected_cliente.senhaSalt = salt;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
+        {
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
+
+        return Ok(selected_cliente);
+    }
+
 
     [HttpDelete("{id}", Name = "DesativarCliente"), Authorize(Roles = "Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
