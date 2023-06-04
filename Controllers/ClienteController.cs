@@ -143,7 +143,7 @@ public class ClienteController : ControllerBase
             novoCliente.toDBO());
     }
 
-    [HttpPut("{id}", Name = "AlterarCliente"), Authorize(Roles = "Consultor")]
+    [HttpPut("{id}", Name = "AlterarCliente"), Authorize(Roles = "Cliente,Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
