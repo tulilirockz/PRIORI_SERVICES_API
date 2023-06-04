@@ -55,12 +55,10 @@ public class CarteiraInvestimentoController : ControllerBase
     {
         var carteira = new CarteiraInvestimento
         {
-            id_efetuacao = dbo.id_efetuacao,
             id_cliente_carteira = dbo.id_cliente_carteira,
             id_investimento = dbo.id_investimento,
             rentabilidade_fixa = dbo.rentabilidade_fixa,
             rentabilidade_variavel = dbo.rentabilidade_variavel,
-            data_efetuacao = dbo.data_efetuacao,
             data_encerramento = dbo.data_encerramento,
             saldo = dbo.saldo,
             status = dbo.status,
@@ -113,6 +111,7 @@ public class CarteiraInvestimentoController : ControllerBase
 
         return Ok();
     }
+
     [HttpGet("saldo/{id}", Name = "SaldoCliente"), Authorize(Roles = "Cliente,Consultor")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -138,5 +137,42 @@ public class CarteiraInvestimentoController : ControllerBase
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
         return Ok(saldo_mais_recente);
+    }
+
+    [HttpPut("saldo/{id}", Name = "SaldoCliente"), Authorize(Roles = "Cliente,Consultor")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> AlterarSaldo(int id, decimal saldo_aplicado) {
+        DateTime? carteiramax_data = await (
+            from carteiras_user 
+            in _context.tblCarteiraInvestimentos
+            where carteiras_user.id_cliente_carteira == id
+            select carteiras_user.data_efetuacao).MaxAsync();
+
+        if (carteiramax_data == null)
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        CarteiraInvestimento? saldo_mais_recente = await (
+            from carteiras_user 
+            in _context.tblCarteiraInvestimentos 
+            where carteiras_user.data_efetuacao == carteiramax_data && carteiras_user.id_cliente_carteira == id
+            select carteiras_user).SingleAsync();
+
+        if (saldo_mais_recente == null)
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        saldo_mais_recente.saldo = saldo_aplicado;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
+        {
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
+
+        return Ok();
     }
 }

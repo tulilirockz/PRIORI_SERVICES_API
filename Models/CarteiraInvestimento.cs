@@ -25,7 +25,7 @@ public class CarteiraInvestimento
     [Column(TypeName = "numeric(8,2)")]
     public Decimal valor_aplicado { get; set; }
     [Column(TypeName = "datetime")]
-    public DateTime? data_encerramento { get; set; } = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+    public DateTime data_encerramento { get; set; }
     [Column(TypeName = "varchar(8)")]
     public string? status { get; set; }
     [Column(TypeName = "numeric(8,2)")]
@@ -34,14 +34,12 @@ public class CarteiraInvestimento
     {
         return new CarteiraInvestimentoDBO
         {
-            id_efetuacao = this.id_efetuacao,
             id_cliente_carteira = this.id_cliente_carteira,
             id_investimento = this.id_investimento,
             rentabilidade_fixa = this.rentabilidade_fixa,
             rentabilidade_variavel = this.rentabilidade_variavel,
             valor_aplicado = this.valor_aplicado,
             data_encerramento = this.data_encerramento,
-            data_efetuacao = this.data_efetuacao,
             status = this.status,
             saldo = this.saldo
         };
