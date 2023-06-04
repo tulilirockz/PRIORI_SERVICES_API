@@ -176,20 +176,35 @@ public class ClienteController : ControllerBase
         return Ok(selected_cliente);
     }
 
-    [HttpPut("senha/{id}", Name = "ResetSenha"), Authorize(Roles = "Cliente,Consultor")]
+    [HttpPut("senha/reset", Name = "ResetSenha")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Cliente>> ResetSenha(int id, PasswordReset request)
+    public async Task<ActionResult<Cliente>> ResetSenha(PasswordReset request)
     {
-        Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
+        Cliente? target_cliente;
 
-        if (selected_cliente == null)
+        try
+        {
+            target_cliente = await (from user in _context.tblClientes
+                                    where user.email == request.email
+                                    select user).SingleAsync();
+        }
+        catch (Exception)
+        {
+            target_cliente = null;
+        }
+
+        if (target_cliente == null ||
+            target_cliente.email == null ||
+            target_cliente.status == "INATIVO")
+        {
             return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
 
         var salt = BCrypt.Net.BCrypt.GenerateSalt();
-        selected_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, salt);
-        selected_cliente.senhaSalt = salt;
+        target_cliente.senhaHash = BCrypt.Net.BCrypt.HashPassword(request.senha, salt);
+        target_cliente.senhaSalt = salt;
 
         try
         {
@@ -200,7 +215,7 @@ public class ClienteController : ControllerBase
             return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
-        return Ok(selected_cliente);
+        return Ok();
     }
 
 
