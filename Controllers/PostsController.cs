@@ -49,6 +49,7 @@ public class PostsController : ControllerBase
             id_autor = dbo.id_autor,
             id_categoria = dbo.id_categoria,
             titulo = dbo.titulo,
+            descricao = dbo.descricao,
             data_criacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
             conteudo = dbo.conteudo
         };
