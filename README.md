@@ -7,7 +7,12 @@ Este repositório contém o código fonte para a API do projeto (de TCC) Priori 
 Para que o projeto possa ser executado corretamente, devem ser especificadas as seguintes variáveis de ambiente em seu local de desenvolvimento:
 
 ```
-PRIORI_DATABASE_PORT, PRIORI_DATABASE_NAME, PRIORI_DATABASE_USER, PRIORI_DATABASE_IP, PRIORI_DATABASE_PASSWORD, PRIORI_SECRET_JWT_KEY
+PRIORI_DATABASE_PORT, 
+PRIORI_DATABASE_NAME, 
+PRIORI_DATABASE_USER, 
+PRIORI_DATABASE_IP, 
+PRIORI_DATABASE_PASSWORD, 
+PRIORI_SECRET_JWT_KEY
 ```
 
 ## Utilização
@@ -16,13 +21,17 @@ Para redundância, criamos varias formas de executar esse projeto, mas, todas de
 
 ### Windows
 
-Você pode simplesmente executar a task "dotnet watch" no VSCode ou executar o programa por meio do arquivo "start.cmd.example". Primeiramente deve-se copiar start.cmd.example p/ start.cmd, alterar suas variáveis de ambiente, e executar!
+Execute o programa por meio do arquivo "start.cmd.example". 
+
+1. Deve-se copiar start.cmd.example para start.cmd
+2. Alterar suas variáveis de ambiente (IP, Senha e JWTKey (pode ser qualquer coisa a JWTKey))
+3. Executar!
+
+Seguindo esses três passos a API deve estar rodando em localhost:5135
 
 ### Linux
 
-A forma mais simples é só executar o programa dotnet com as variáveis de ambiente diretamente especificadas antes do comando, como o exemplo: `PRIORI_DATABASE_PORT=1433 dotnet watch`
-
-Você também pode executar a task "dotnet watch" por meio do VSCode e configura-la para suas necessidades.
+Funciona da mesma forma que o Windows, só que utilizando o arquivo start.sh.example ao invés de start.cmd.example
 
 ### Container
 
