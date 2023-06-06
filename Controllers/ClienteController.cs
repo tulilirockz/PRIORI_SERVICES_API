@@ -243,4 +243,41 @@ public class ClienteController : ControllerBase
 
         return Ok(selected_cliente);
     }
+
+    [HttpGet("checkconsultor/{id}", Name = "ClienteIsConsultor"), Authorize(Roles = "Cliente")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ClienteIsConsultor(int id) {
+        // TODO: WARNING: Isso pode ser uma falha de segurança, pois um cliente pode criar uma conta com o email do consultor, talvez criar um perfil de cliente p/ o consultor inicialmente seja uma boa ideia p/ evitar esse tipo de erro.
+        // Ou também, é possível criar um atributo no banco de dados, mas infelizmente isso não será possível de se implementar agora.
+        Cliente? selected_cliente = await _context.tblClientes.FindAsync(id);
+
+        if (selected_cliente == null)
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        Consultor? selected_consultor;
+
+        try
+        {
+            selected_consultor = await (from consultor in _context.tblConsultores
+                                        where consultor.email == selected_cliente.email
+                                        select consultor).SingleAsync();
+        }
+        catch (Exception)
+        {
+            selected_consultor = null;
+        }
+
+        if (selected_consultor == null ||
+            selected_consultor.usuario == null ||
+            selected_consultor.status == "INATIVO" ||
+            selected_cliente.status == "INATIVO" ||
+            selected_cliente.email == null)
+        {
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
+
+        return Ok();
+    }
 }

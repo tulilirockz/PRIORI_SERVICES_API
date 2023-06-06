@@ -38,7 +38,7 @@ public class PostsController : ControllerBase
         return Ok(selected_blog_post);
     }
 
-    [HttpPost(Name = "CreateBlogPost"), Authorize(Roles = "Consultor")]
+    [HttpPost(Name = "CreateBlogPost"), Authorize(Roles = "Cliente,Consultor")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -72,7 +72,7 @@ public class PostsController : ControllerBase
             novoPost.toDBO(novoPost));
     }
 
-    [HttpDelete("{id}"), Authorize(Roles = "Consultor")]
+    [HttpDelete("{id}"), Authorize(Roles = "Cliente,Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -97,7 +97,7 @@ public class PostsController : ControllerBase
         return Ok();
     }
 
-    [HttpPut("{id}"), Authorize(Roles = "Consultor")]
+    [HttpPut("{id}"), Authorize(Roles = "Cliente,Consultor")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
