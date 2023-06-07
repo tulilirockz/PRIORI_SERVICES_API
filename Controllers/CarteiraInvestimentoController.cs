@@ -117,13 +117,16 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<decimal>> SaldoUsuario(int id) {
-
-        DateTime? carteiramax_data = await (
-            from carteiras_user 
-            in _context.tblCarteiraInvestimentos
-            where carteiras_user.id_cliente_carteira == id
-            select carteiras_user.data_efetuacao).MaxAsync();
-
+        try {
+            DateTime? carteiramax_data = await (
+                from carteiras_user 
+                in _context.tblCarteiraInvestimentos
+                where carteiras_user.id_cliente_carteira == id
+                select carteiras_user.data_efetuacao).MaxAsync();
+        } catch (System.InvalidOperationException) {
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
+        
         if (carteiramax_data == null)
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
@@ -144,11 +147,15 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> AlterarSaldo(int id, decimal saldo_aplicado) {
-        DateTime? carteiramax_data = await (
-            from carteiras_user 
-            in _context.tblCarteiraInvestimentos
-            where carteiras_user.id_cliente_carteira == id
-            select carteiras_user.data_efetuacao).MaxAsync();
+        try {
+            DateTime? carteiramax_data = await (
+                from carteiras_user 
+                in _context.tblCarteiraInvestimentos
+                where carteiras_user.id_cliente_carteira == id
+                select carteiras_user.data_efetuacao).MaxAsync();
+        } catch (System.InvalidOperationException) {
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
 
         if (carteiramax_data == null)
             return BadRequest(DefaultRequests.BAD_REQUEST);
