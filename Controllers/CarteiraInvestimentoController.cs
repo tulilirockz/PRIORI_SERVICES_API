@@ -59,9 +59,9 @@ public class CarteiraInvestimentoController : ControllerBase
             id_investimento = dbo.id_investimento,
             rentabilidade_fixa = dbo.rentabilidade_fixa,
             rentabilidade_variavel = dbo.rentabilidade_variavel,
-            data_encerramento = dbo.data_encerramento,
+            data_efetuacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(EnvironmentVariables.DATABASE_LOCALE)),
             saldo = dbo.saldo,
-            status = dbo.status,
+            status = "ATIVO",
             valor_aplicado = dbo.valor_aplicado
         };
 
@@ -116,23 +116,27 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<decimal>> SaldoUsuario(int id) {
-        try {
+    public async Task<ActionResult<decimal>> SaldoUsuario(int id)
+    {
+        try
+        {
             DateTime? carteiramax_data = await (
-                from carteiras_user 
+                from carteiras_user
                 in _context.tblCarteiraInvestimentos
                 where carteiras_user.id_cliente_carteira == id
                 select carteiras_user.data_efetuacao).MaxAsync();
-        } catch (System.InvalidOperationException) {
+        }
+        catch (System.InvalidOperationException)
+        {
             return BadRequest(DefaultRequests.BAD_REQUEST);
         }
-        
+
         if (carteiramax_data == null)
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
         decimal? saldo_mais_recente = await (
-            from carteiras_user 
-            in _context.tblCarteiraInvestimentos 
+            from carteiras_user
+            in _context.tblCarteiraInvestimentos
             where carteiras_user.data_efetuacao == carteiramax_data && carteiras_user.id_cliente_carteira == id
             select carteiras_user.saldo).SingleAsync();
 
@@ -146,14 +150,18 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> AlterarSaldo(int id, decimal saldo_aplicado) {
-        try {
+    public async Task<IActionResult> AlterarSaldo(int id, decimal saldo_aplicado)
+    {
+        try
+        {
             DateTime? carteiramax_data = await (
-                from carteiras_user 
+                from carteiras_user
                 in _context.tblCarteiraInvestimentos
                 where carteiras_user.id_cliente_carteira == id
                 select carteiras_user.data_efetuacao).MaxAsync();
-        } catch (System.InvalidOperationException) {
+        }
+        catch (System.InvalidOperationException)
+        {
             return BadRequest(DefaultRequests.BAD_REQUEST);
         }
 
@@ -161,8 +169,8 @@ public class CarteiraInvestimentoController : ControllerBase
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
         CarteiraInvestimento? saldo_mais_recente = await (
-            from carteiras_user 
-            in _context.tblCarteiraInvestimentos 
+            from carteiras_user
+            in _context.tblCarteiraInvestimentos
             where carteiras_user.data_efetuacao == carteiramax_data && carteiras_user.id_cliente_carteira == id
             select carteiras_user).SingleAsync();
 

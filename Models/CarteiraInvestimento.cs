@@ -25,7 +25,7 @@ public class CarteiraInvestimento
     [Column(TypeName = "numeric(8,2)")]
     public Decimal valor_aplicado { get; set; }
     [Column(TypeName = "datetime")]
-    public DateTime data_encerramento { get; set; }
+    public DateTime? data_encerramento { get; set; } = null;
     [Column(TypeName = "varchar(8)")]
     public string? status { get; set; }
     [Column(TypeName = "numeric(8,2)")]
