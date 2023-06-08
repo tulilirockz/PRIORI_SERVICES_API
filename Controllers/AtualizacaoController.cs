@@ -23,7 +23,7 @@ public class AtualizacaoController : ControllerBase
     }
 
 
-    [HttpGet(Name = "GetAllAtualizacao"), Authorize(Roles = "Consultor,Cliente")]
+    [HttpGet(Name = "GetAllAtualizacao")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -33,7 +33,7 @@ public class AtualizacaoController : ControllerBase
         return await _repository.FindAll().ToListAsync();
     }
 
-    [HttpGet("{id}", Name = "GetAtualizacaoById"), Authorize(Roles = "Consultor,Cliente")]
+    [HttpGet("{id}", Name = "GetAtualizacaoById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -144,7 +144,7 @@ public class AtualizacaoController : ControllerBase
         return Ok(atualizacao);
     }
 
-    [HttpGet("investimento/{id}", Name = "GetAtualizacaoByInvestimentoId"), Authorize(Roles = "Consultor,Cliente")]
+    [HttpGet("investimento/{id}", Name = "GetAtualizacaoByInvestimentoId")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
