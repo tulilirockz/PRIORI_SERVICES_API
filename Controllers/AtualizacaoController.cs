@@ -14,9 +14,12 @@ public class AtualizacaoController : ControllerBase
 {
     private readonly IAtualizacaoRepository _repository;
 
-    public AtualizacaoController(IAtualizacaoRepository repository)
+    private readonly PrioriDbContext _context;
+
+    public AtualizacaoController(IAtualizacaoRepository repository, PrioriDbContext context)
     {
         _repository = repository;
+        _context = context;
     }
 
 
@@ -139,5 +142,25 @@ public class AtualizacaoController : ControllerBase
         }
 
         return Ok(atualizacao);
+    }
+
+    [HttpGet("investimento/{id}", Name = "GetAtualizacaoByInvestimentoId"), Authorize(Roles = "Consultor,Cliente")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<Atualizacao>>> GetFromInvestimentoID(int id)
+    {
+        Atualizacao[]? atualizacoes_investimento;
+
+        try
+        {
+            atualizacoes_investimento = await (from atualizacao in _context.tblAtualizacao where atualizacao.id_investimento == id select atualizacao).ToArrayAsync();
+        }
+        catch (Exception e) when (e is ArgumentException || e is OperationCanceledException)
+        {
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
+
+        return Ok(atualizacoes_investimento);
     }
 }
