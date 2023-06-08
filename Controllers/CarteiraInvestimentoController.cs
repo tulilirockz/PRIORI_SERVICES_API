@@ -118,9 +118,10 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<decimal>> SaldoUsuario(int id)
     {
+        DateTime? carteiramax_data;
         try
         {
-            DateTime? carteiramax_data = await (
+            carteiramax_data = await (
                 from carteiras_user
                 in _context.tblCarteiraInvestimentos
                 where carteiras_user.id_cliente_carteira == id
@@ -152,9 +153,10 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> AlterarSaldo(int id, decimal saldo_aplicado)
     {
+        DateTime? carteiramax_data;
         try
         {
-            DateTime? carteiramax_data = await (
+            carteiramax_data = await (
                 from carteiras_user
                 in _context.tblCarteiraInvestimentos
                 where carteiras_user.id_cliente_carteira == id
