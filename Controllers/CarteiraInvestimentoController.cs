@@ -151,7 +151,7 @@ public class CarteiraInvestimentoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> AlterarSaldo(int id, decimal saldo_aplicado)
+    public async Task<IActionResult> AlterarSaldo(int id, SaldoAplicarRequest saldo_aplicado)
     {
         DateTime? carteiramax_data;
         try
@@ -179,7 +179,7 @@ public class CarteiraInvestimentoController : ControllerBase
         if (saldo_mais_recente == null)
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
-        saldo_mais_recente.saldo = saldo_aplicado;
+        saldo_mais_recente.saldo = saldo_aplicado.saldo_aplicado;
 
         try
         {
