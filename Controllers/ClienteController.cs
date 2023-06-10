@@ -194,8 +194,14 @@ public class ClienteController : ControllerBase
         if (selected_cliente == null)
             return BadRequest(DefaultRequests.BAD_REQUEST);
 
-        selected_cliente.email = request.email;
-        selected_cliente.endereco = request.endereco;
+        if(request.email != null)
+            selected_cliente.email = request.email;
+        
+        if(request.endereco != null)
+            selected_cliente.endereco = request.endereco;
+
+        if (request.pontuacao != null) 
+            selected_cliente.pontuacao = request.pontuacao;
 
         if (request.senha != null)
         {

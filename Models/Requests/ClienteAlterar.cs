@@ -7,4 +7,5 @@ public struct ClienteAlterar
     public string? senha { get; set; }
 
     public string? endereco {get;set;}
+    public float? pontuacao {get;set;}
 }
