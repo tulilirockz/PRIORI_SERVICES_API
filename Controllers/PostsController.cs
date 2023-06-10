@@ -97,11 +97,18 @@ public class PostsController : ControllerBase
 
         // Se a categoria não tiver mais nenhum post pós deleção, remover categoria
         try {
-            await (from categoria in _context.tblCategoriaBlog where categoria.id_categoria == selected_post.id_categoria select categoria).SingleAsync();
-        } catch (Exception) {
-
-            _context.tblCategoriaBlog.Remove();
-
+            await (from post in _context.tblPostBlog where post.id_categoria == selected_post.id_categoria select post).SingleAsync();
+        } 
+        catch (Exception e) when (e is ArgumentNullException argumentNullException || e is InvalidOperationException invalidOperationException || e is OperationCanceledException) 
+        {
+            try {
+                _context.tblCategoriaBlog.Remove(
+                    await _context.tblCategoriaBlog.FindAsync(selected_post.id_categoria) ?? throw new ArgumentNullException();
+                );
+            } catch (ArgumentNullException) {
+               return Ok();
+            }
+            
             try {
                 await _context.SaveChangesAsync();
             } catch (Exception) {
