@@ -83,67 +83,6 @@ public class AtualizacaoController : ControllerBase
             novaAtualizacao.toDBO());
     }
 
-    [HttpDelete("{id}"), Authorize(Roles = "Consultor")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Delete(int id)
-    {
-        Atualizacao? atualizacao = await _repository.GetById(id);
-
-        if (atualizacao == null)
-            return BadRequest(DefaultRequests.BAD_REQUEST);
-
-        try
-        {
-            await _repository.Delete(atualizacao.id_atualizacao);
-        }
-        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
-        {
-            return BadRequest(DefaultRequests.BAD_REQUEST);
-        }
-
-        return Ok(atualizacao);
-    }
-
-    [HttpPut("{id}"), Authorize(Roles = "Consultor")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Alter(int id, AtualizacaoDBO request)
-    {
-        Atualizacao? atualizacao;
-
-        try
-        {
-            atualizacao = await _repository.GetById(id);
-        }
-        catch (InvalidOperationException)
-        {
-            return BadRequest(DefaultRequests.BAD_REQUEST);
-        }
-
-        if (atualizacao == null)
-            return BadRequest(DefaultRequests.BAD_REQUEST);
-
-        atualizacao.data_atualizacao = request.data_atualizacao;
-        atualizacao.rentFixaAntiga = request.rentFixaAntiga;
-        atualizacao.rentFixaAtual = request.rentFixaAtual;
-        atualizacao.rentFixaAtual = request.rentVarAntiga;
-        atualizacao.rentVarAtual = request.rentVarAtual;
-
-        try
-        {
-            await _repository.Update(atualizacao);
-        }
-        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
-        {
-            return BadRequest(DefaultRequests.BAD_REQUEST);
-        }
-
-        return Ok(atualizacao);
-    }
-
     [HttpGet("investimento/{id}", Name = "GetAtualizacaoByInvestimentoId")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

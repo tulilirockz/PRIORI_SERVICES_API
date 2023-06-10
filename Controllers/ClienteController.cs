@@ -117,12 +117,52 @@ public class ClienteController : ControllerBase
             nome = request.nome,
             dataNascimento = request.dataNascimento,
             pontuacao = 0,
-            respostaAssessoria = RespostaAssessoria.recusou,
+            respostaAssessoria = RespostaAssessoria.aceitou,
             status = "ATIVO"
         };
 
 
         _context.tblClientes.Add(novoCliente);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException)
+        {
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+        }
+
+        Cliente? cliente_criado = null;
+
+        try
+        {
+            cliente_criado = await (from user in _context.tblClientes
+                                    where user.email == request.email
+                                    select user).SingleAsync();
+        }
+        catch (Exception)
+        {
+            cliente_criado = null;
+        }
+
+        if (cliente_criado == null)
+            return BadRequest(DefaultRequests.BAD_REQUEST);
+
+        var carteira_criada = new CarteiraInvestimento
+        {
+            saldo = 0,
+            valor_aplicado = 0,
+            status = "ATIVO",
+            id_investimento = 1,
+            id_cliente_carteira = cliente_criado.id_cliente,
+            data_efetuacao = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(EnvironmentVariables.DATABASE_LOCALE)),
+            data_encerramento = System.TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(EnvironmentVariables.DATABASE_LOCALE)),
+            rentabilidade_variavel = 0,
+            rentabilidade_fixa = 0
+        };
+
+        _context.tblCarteiraInvestimentos.Add(carteira_criada);
 
         try
         {
