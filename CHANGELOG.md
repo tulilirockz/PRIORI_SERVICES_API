@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.4.0](https://github.com/Priori-Services/API/compare/v1.3.0...v1.4.0) (2023-06-10)
+
+
+### Features
+
+* endpoint p/ alteração de senha e saldo do cliente ([ff4122e](https://github.com/Priori-Services/API/commit/ff4122e8b8d8b2ced19ad92d340897e70254d107))
+* endpoint p/ checkar se cliente é consultor / authorizations no posts ([c431e81](https://github.com/Priori-Services/API/commit/c431e812b607d751ff0c705cbfd7791d6377c058))
+* endpoint p/ password reset request ([0a3a1f3](https://github.com/Priori-Services/API/commit/0a3a1f359733913044a6b13aeec95746967cd9e7))
+* endpoint p/ pegar histórico de investimento ([a3c61f8](https://github.com/Priori-Services/API/commit/a3c61f81d4cfbb751195fde60022a62becec6b3e))
+* inserção da requisição de pontuação do cliente ([91afb79](https://github.com/Priori-Services/API/commit/91afb79f97213f988fb7e10720a2a8ecbe5d03e3))
+
+
+### Bug Fixes
+
+* adicionar descrição do post quando criado ([07d9697](https://github.com/Priori-Services/API/commit/07d96975b9f00ebec02441bdaf6998ddecc9a8b0))
+* adicionar devbox lock p/ nn atualziar sempre que usar devbox ([5b2a5f9](https://github.com/Priori-Services/API/commit/5b2a5f94bff5a4a9c82d18f43891b938b56eaa6f))
+* adicionar perms p/ clientes autenticarem no alterarcliente ([7f505fe](https://github.com/Priori-Services/API/commit/7f505fe1999cad7c4346daaf0e0edfe95274063b))
+* bad request se carteira do usuário não existir nas operações de saldo ([c8ac4d4](https://github.com/Priori-Services/API/commit/c8ac4d449e7da84448833bc711eb9ba6454589ff))
+* carteira não compilando por erros de variaveis ([d93f6b0](https://github.com/Priori-Services/API/commit/d93f6b0150b4c35250ad298bd9b10e3386d49fc2))
+* carteirainvestimento sem id_efetuação e data_efetuacao ([ef77ddd](https://github.com/Priori-Services/API/commit/ef77ddd99daa2be66f4c313e2eed3301da759532))
+* handeling pra remover categoria caso nn exista mais posts nela ([787b80f](https://github.com/Priori-Services/API/commit/787b80f25fe453793395ad77e2963e8b431f3e39))
+* inserção de saldo [@tuliliorockes](https://github.com/tuliliorockes) ([482b6d9](https://github.com/Priori-Services/API/commit/482b6d903731447be31864aa6a2ac1b3372882ff))
+* json object p/ password reset request ([328f921](https://github.com/Priori-Services/API/commit/328f9214aa55a863570d5894a44bad16ac74f8c4))
+* remover authorize desnecessários nos gets de atualizações ([252ffd3](https://github.com/Priori-Services/API/commit/252ffd362221d853df55c1b15936bfc39ada5a79))
+* remover endpoints desnecessários ([d358e4e](https://github.com/Priori-Services/API/commit/d358e4e50d30333e85db2e78ccd1cda99954b494))
+* set nullable data_encerramento na carteiraDBO ([861c66f](https://github.com/Priori-Services/API/commit/861c66f661ce0caaa6753c8bad69cdbcf383292d))
+* typo ([7fda620](https://github.com/Priori-Services/API/commit/7fda620521a89bdbae490f55fac81316c2e389ed))
+* utilizar somente campos que usuário vai usar no carteira investimento ([81bf4df](https://github.com/Priori-Services/API/commit/81bf4df302b1721309908aa0488d274acb84e1ea))
+
 ## [1.3.0](https://github.com/Priori-Services/API/compare/v1.2.0...v1.3.0) (2023-05-30)
 
 
