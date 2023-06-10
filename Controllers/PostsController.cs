@@ -103,7 +103,7 @@ public class PostsController : ControllerBase
         {
             try {
                 _context.tblCategoriaBlog.Remove(
-                    await _context.tblCategoriaBlog.FindAsync(selected_post.id_categoria) ?? throw new ArgumentNullException();
+                    await _context.tblCategoriaBlog.FindAsync(selected_post.id_categoria) ?? throw new ArgumentNullException()
                 );
             } catch (ArgumentNullException) {
                return Ok();
